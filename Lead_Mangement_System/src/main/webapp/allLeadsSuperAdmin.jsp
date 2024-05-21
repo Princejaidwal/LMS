@@ -80,7 +80,7 @@ List<Lead> list = leadDao.getAllLeadsByLimit(itemsPerPage, (currentPage - 1) * i
 			</div>
 		</div>
 		
-		 <div class="main-container p-2">
+		<%-- <div class="main-container p-2">
 			<form action="/Lead_Mangement_System/search-superadmin-leads.jsp" method="get">
 				<div class="row">
 					<div class="col-4  text-white d-flex flex-column">
@@ -105,7 +105,7 @@ List<Lead> list = leadDao.getAllLeadsByLimit(itemsPerPage, (currentPage - 1) * i
 					</div>
 				</div>
 			</form>
-		</div> 
+		</div> --%>
 		<div class="pe-2 ps-2">
 			<p class="fs-2 text-white box-heading">All Leads</p>
 		</div>
@@ -134,7 +134,7 @@ List<Lead> list = leadDao.getAllLeadsByLimit(itemsPerPage, (currentPage - 1) * i
 						<th>Date</th>
 						<th>Owner</th>
 						<th>Comment</th>
-					  <th colspan="2">Action</th> 
+						<%-- <th colspan="2">Action</th> --%>
 					</tr>
 				</thead>
   				<tbody>
@@ -154,12 +154,12 @@ List<Lead> list = leadDao.getAllLeadsByLimit(itemsPerPage, (currentPage - 1) * i
 								<button type = 'submit' class = 'submit-btn w-100' name = 'add-comment' value = "<%=l.getEmail() %>">Add</button>
 							</form>
 						</td>
-						 <td>
+						<%-- <td>
 							<form action ='updateSuperAdminAllLeads.jsp' method = 'post'>
 								<button type = 'submit' class = 'submit-btn w-100'  name = 'update' value = "<%=l.getId() %>">Update</button>
 							</form>
 							<button class = 'submit-btn w-100 mt-2' name = 'delete' onclick='myFunction(<%= l.getId() %>)'>Delete</button>
-						</td> 
+						</td> --%>
 					</tr>
 				<%}%>
    				</tbody>
