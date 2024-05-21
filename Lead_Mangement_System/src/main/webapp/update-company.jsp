@@ -71,7 +71,7 @@ CookiesHelper.setCookies(company, response, "company");
 					session.removeAttribute("company-register");
 					}
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				} %>
 			</div>
 			<form action="UpdateCompany" method="post">

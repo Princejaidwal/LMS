@@ -76,7 +76,7 @@ Connection connect = DatabaseConnection.getConnection();
 						session.removeAttribute("userMsg");
 						}
 					}catch(Exception e){
-						System.out.println(e);
+						e.printStackTrace();
 					} %>
 				<div class="user-info-container p-4 gap-2"> 	
 				<% User getUserByEmail = userDao.getUserByEmail(userCookie.getEmail()); %>

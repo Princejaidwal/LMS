@@ -153,8 +153,9 @@
 									" <strong>Alert!</strong> Data deleted Successfully </div>");
 					}
 					session.removeAttribute("msg");
-					}catch(Exception e)
-					{System.out.println(e);} 
+					}catch(Exception e){
+						e.printStackTrace();
+					} 
 				%>
 				<% try{String success = (String)session.getAttribute("updateMsg"); 
 					if(success!= null){
@@ -163,8 +164,9 @@
 									" <strong>Success!</strong> Data updated Successfully </div>");
 					}
 					session.removeAttribute("updateMsg");
-					}catch(Exception e)
-					{System.out.println(e);} 
+					}catch(Exception e) {
+						e.printStackTrace();
+					} 
 				%>
 				<table class="table table-dark table-striped table-hover" id= "table-id">
   					<thead>

@@ -21,7 +21,7 @@ SuperAdminDao superAdminDao = new SuperAdminDao();
 CompanyDao companyDao = new CompanyDao();
 User userCookie = CookiesHelper.getUserCookies(request, "user");
 if(!"Superadmin".equals(userCookie.getIsAdmin())){
-	session.setAttribute("error","You are not admin!");
+	session.setAttribute("error","You are not super admin!");
 	response.sendRedirect("index.jsp");
 }
 int companyCount = companyDao.getAllCompanyCount();
@@ -67,7 +67,7 @@ Connection connect = DatabaseConnection.getConnection();
 					session.removeAttribute("company-register");
 					}
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				} %>
 			</div>
 			<form action="AddCompanyBySuperAdmin" method="post">
@@ -115,7 +115,7 @@ Connection connect = DatabaseConnection.getConnection();
 				session.removeAttribute("adminMsg");
 				}
 			}catch(Exception e){
-				System.out.println(e);
+				e.printStackTrace();
 			} %>
 			</div>
 			<form action = "AddAdminBySuperAdmin" method = "post">
@@ -176,7 +176,7 @@ Connection connect = DatabaseConnection.getConnection();
 				session.removeAttribute("userMsg");
 				}
 			}catch(Exception e){
-				System.out.println(e);
+				e.printStackTrace();
 			} %>
 			</div>
 			<form action = "AddUserBySuperAdmin" method = "post">

@@ -68,7 +68,7 @@ int totalLeadCount = leadDao.getTotalLeadsCount();
 				session.removeAttribute("comment");
 				}
 			}catch(Exception e){
-				System.out.println(e);
+				e.printStackTrace();
 			} %>
 			</div>
 			<form action ="AddSuperAdminComment" method="post" class="form-container">

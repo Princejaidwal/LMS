@@ -432,7 +432,6 @@ public class SuperAdminDao {
 				}
 			}catch(Exception e){
 				e.printStackTrace();
-				System.out.println(e);
 			}
 		}else if(searchBy.equals("email")){
 			list = leadDao.search(SEARCH_LEADS_BY_EMAIL_OFFSET_AND_LIMIT, search, limit, offset);
@@ -450,7 +449,6 @@ public class SuperAdminDao {
 		return list;
 	}
 	public List<Lead> search(String query ,String search,int limit, int offset){
-		System.out.println(search);
 		List<Lead> list = new ArrayList<>();
 		try{
 			pst = con.prepareStatement(query);
@@ -476,7 +474,6 @@ public class SuperAdminDao {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			System.out.println(e);
 		}
 		return list;
 	}

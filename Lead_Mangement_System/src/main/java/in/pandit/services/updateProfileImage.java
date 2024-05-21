@@ -27,6 +27,7 @@ public class updateProfileImage extends HttpServlet {
 		InputStream inputStream = null;
 		Part image = request.getPart("pfImage");
 		
+		HttpSession imgStatus = request.getSession();
 	    inputStream = image.getInputStream();
 		try {
 			Connection conn = DatabaseConnection.getConnection();
@@ -42,15 +43,17 @@ public class updateProfileImage extends HttpServlet {
             int status = stmt.executeUpdate();
             if(status > 0) {
             	
-            	HttpSession imgStatus = request.getSession();
             	imgStatus.setAttribute("imgStatus", "Updated Profile");
             	response.sendRedirect("profile.jsp");
             }
             else {
-            	System.out.println("Something went wrong!");
+            	imgStatus.setAttribute("imgStatus", "Something went wrong!");
+            	response.sendRedirect("profile.jsp");
             }
 		}catch(Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
+			imgStatus.setAttribute("imgStatus", "Something went wrong!");
+        	response.sendRedirect("profile.jsp");
 		}
 	}
 

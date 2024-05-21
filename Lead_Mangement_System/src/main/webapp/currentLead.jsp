@@ -98,7 +98,7 @@ List<Lead> list = leadDao.getAllLeadsByLimitCurrentOwnerAndCompany(itemsPerPage,
 					session.removeAttribute("userMsg");
 					}
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				} %>
 			</div>
 			<table class="table table-dark table-striped table-hover" id= "table-id">

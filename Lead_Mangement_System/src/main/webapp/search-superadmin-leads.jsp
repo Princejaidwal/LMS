@@ -452,7 +452,7 @@ table tr:nth-child(even){
 					<p style="font-size:20px; text-align: center;"><% out.print(namedb); %> <span  style="font-size:12px; text-align: center;"><% out.print(emaildb); %></span></p>
 				<%									
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				}
 			%>
 		</div>
@@ -552,7 +552,7 @@ table tr:nth-child(even){
 							}
 							session.removeAttribute("msg");
 					}catch(Exception e){
-						System.out.println(e);
+						e.printStackTrace();
 					} 
 					
 				%>
@@ -565,8 +565,9 @@ table tr:nth-child(even){
 						}
 						session.removeAttribute("updateMsg");
 					
-					}catch(Exception e)
-					{System.out.println(e);} 
+					}catch(Exception e){
+						e.printStackTrace();
+					} 
 				%>
 				<table class="table table-striped table-class" id= "table-id">
   

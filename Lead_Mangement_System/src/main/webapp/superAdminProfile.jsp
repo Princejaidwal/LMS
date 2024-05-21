@@ -101,7 +101,7 @@ Connection connect = DatabaseConnection.getConnection();
 				session.removeAttribute("update");
 				}
 			}catch(Exception e){
-				System.out.println(e);
+				e.printStackTrace();
 			} %>	
 			<div class="user-info-container p-4 gap-2"> 	
 				<% User user = userDao.getUserByEmail(userCookie.getEmail()); %>

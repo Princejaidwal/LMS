@@ -20,18 +20,23 @@ public class deleteSuperAdminLead extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
    
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int id = Integer.parseInt(request.getParameter("delete").trim());
+		HttpSession session = request.getSession();
 		LeadDao leadDao = new LeadDao();
 		try {
 			int check = leadDao.deleteLeadByLeadId(id);
 			if(check>0) {
-				HttpSession session = request.getSession();
 				session.setAttribute("msg", "Data Deleted Successfully");
+				response.sendRedirect("allLeadsSuperAdmin.jsp");
+			}else {
+				session.setAttribute("msg", "Something went wrong!");
 				response.sendRedirect("allLeadsSuperAdmin.jsp");
 			}
 		}catch(Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
+			session.setAttribute("msg", "Something went wrong!");
+			response.sendRedirect("allLeadsSuperAdmin.jsp");
 		}
 	}
 

@@ -13,12 +13,10 @@ public class DatabaseConnection {
 			String pass = "root";
 			Class.forName("org.postgresql.Driver");
 			conn = DriverManager.getConnection(url, user, pass);
-			if (conn != null) {
-//				System.out.println("Database connected Successfully");
-			}
 		}catch(Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
+		
 		return conn;
 	}
 }

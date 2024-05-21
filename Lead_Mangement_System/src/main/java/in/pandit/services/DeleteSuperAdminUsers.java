@@ -37,7 +37,9 @@ public class DeleteSuperAdminUsers extends HttpServlet {
 				response.sendRedirect("allUsersSuperAdmin.jsp");
 			}
 		}catch(Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
+			session.setAttribute("updateMsg", "Something went wrong!");
+			response.sendRedirect("allUsersSuperAdmin.jsp");
 		}
 	}
 

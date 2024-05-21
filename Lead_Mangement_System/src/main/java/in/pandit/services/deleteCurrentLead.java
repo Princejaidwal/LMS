@@ -32,7 +32,7 @@ public class deleteCurrentLead extends HttpServlet {
 				response.sendRedirect("currentLead.jsp");
 			}
 		}catch(Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 

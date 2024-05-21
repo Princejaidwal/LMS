@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="in.pandit.helper.CookiesHelper"%>
 <%@page import="in.pandit.model.User"%>
 <%@page import="in.pandit.dao.UserDao"%>
@@ -6,9 +7,7 @@
 <%@page import="java.util.List"%>
 <%@page import="in.pandit.model.Lead"%>
 <%@page import="in.pandit.dao.LeadDao"%>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-     <%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.DriverManager"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.Connection"%>
@@ -92,7 +91,7 @@ Connection connect = DatabaseConnection.getConnection();
 						<div class="comment-content">
 				            <h5>Posted By : <%= UserDao.getUserNameByEmail(comment.getUseremail(),companyId) %></h5>
 				            <p>Comment : <%= comment.getComment() %></p>
-				            <h5>Posted on : <%= comment.getCreationDate().toLocaleString() %></h5>
+				            <h5>Posted on : <%= comment.getCreationDate() %></h5>
 				        </div>
 				        <%if(comment.getUserid() == user.getId()) {%>
 					        <div class="btn-container">

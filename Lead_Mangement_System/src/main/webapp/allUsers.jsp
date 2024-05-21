@@ -68,7 +68,7 @@
 					session.removeAttribute("adminMsg");
 					}
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				} %>
 				<%try{
 					String update = (String)session.getAttribute("update");
@@ -80,7 +80,7 @@
 					session.removeAttribute("update");
 					}
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				} %>
 					<table class="table table-dark table-striped table-hover">
 						<thead>
