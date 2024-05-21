@@ -78,7 +78,7 @@ if(!userEmail.equals(email)) {
 					session.removeAttribute("adminMsg");
 					}
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				} %>
 			</div>
 			<form action ="UpdateAdminComment" method="post" class="form-container">

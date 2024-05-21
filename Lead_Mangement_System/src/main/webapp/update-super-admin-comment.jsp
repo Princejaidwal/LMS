@@ -460,7 +460,7 @@ input[type=text]:focus {
 					<p style="font-size:20px; text-align: center;"><% out.print(namedb); %> <span  style="font-size:12px; text-align: center;"><% out.print(emaildb); %></span></p>
 				<%									
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				}
 			%>
 			

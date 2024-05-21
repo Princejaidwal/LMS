@@ -65,7 +65,7 @@
 						session.removeAttribute("already-lead");
 						}
 					}catch(Exception e){
-						System.out.println(e);
+						e.printStackTrace();
 					} %>
 			</div>
 			<form action = "addLeadsAdmin" method = "post">
@@ -96,7 +96,7 @@
 						<input class="form-control" type = "text" name = "experience" placeholder="Lead Experience" required/>
 					</div>
 					<div class="col-6 d-flex flex-column text-white">
-						<label class="fs-5 mb-2 mt-3">Salary  </label>
+						<label class="fs-5 mb-2 mt-3">Salary in LPA </label>
 						<input class="form-control" type = "number" name = "salary" placeholder="Lead Salary" required/>
 					</div>
 					<div class="col-6 d-flex flex-column text-white">
@@ -149,7 +149,7 @@
 				session.removeAttribute("already");
 				}
 			}catch(Exception e){
-				System.out.println(e);
+				e.printStackTrace();
 			} %>
 			</div>
 			<form action = "AddUserByAdmin" method = "post">

@@ -93,7 +93,7 @@ List<User> userList = superAdminDao.getAllUserByLimitAndOffset(itemsPerPage, (cu
 				<%}
 					session.removeAttribute("updateMsg");
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				}
 				if(userList.size()>0){
 				%>

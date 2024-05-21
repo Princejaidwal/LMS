@@ -58,7 +58,7 @@ Connection connect = DatabaseConnection.getConnection();
 				session.removeAttribute("help");
 				}
 			}catch(Exception e){
-				System.out.println(e);
+				e.printStackTrace();
 			} %>
 		</div>
 		<form action="help" method="post">

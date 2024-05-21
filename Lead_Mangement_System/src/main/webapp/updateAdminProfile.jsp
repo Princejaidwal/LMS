@@ -68,7 +68,7 @@
 				session.removeAttribute("update");
 				}
 			}catch(Exception e){
-				System.out.println(e);
+				e.printStackTrace();
 			} %>
 			<form action = "updateAdminProfile" method = "post">
 				<div class="row p-3">
@@ -117,7 +117,7 @@
 					session.removeAttribute("change");
 					}
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				} %>
 				<form action = "ChangeAdminPassword" method = "post">
 					<div class="row p-3">

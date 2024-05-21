@@ -621,7 +621,6 @@ public class LeadDao {
 				}
 			}catch(Exception e){
 				e.printStackTrace();
-				System.out.println(e);
 			}
 		}else if(searchBy.equals("email")){
 			list = leadDao.search(SEARCH_LEADS_BY_EMAIL_OFFSET_AND_LIMIT, search, limit, offset, companyId);
@@ -670,7 +669,6 @@ public class LeadDao {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			System.out.println(e);
 		}
 		return list;
 	}

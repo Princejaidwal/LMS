@@ -191,7 +191,6 @@ h2{
 			try {
 				String error = (String)session.getAttribute("error");
 				if (error != null) {
-					System.out.println("Chala");
 			%>
 			<div class='alert alert-success alert-dismissible fade show'>
 				<%=error%>
@@ -200,7 +199,7 @@ h2{
 			session.removeAttribute("error");
 			}
 			} catch (Exception e) {
-			System.out.println(e);
+				e.printStackTrace();
 			}
 		%>
         <div class="input_group">

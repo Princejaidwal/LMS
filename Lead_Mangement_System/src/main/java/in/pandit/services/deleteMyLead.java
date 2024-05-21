@@ -20,18 +20,23 @@ public class deleteMyLead extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String email = request.getParameter("delete").trim();
+		HttpSession session = request.getSession();
 		try {
 			Connection conn = DatabaseConnection.getConnection();
 			PreparedStatement pst = conn.prepareStatement("delete from leads where email = ?");
 			pst.setString(1, email);
 			int check = pst.executeUpdate();
 			if(check>0) {
-				HttpSession session = request.getSession();
 				session.setAttribute("msg", "Data Deleted Successfully");
+				response.sendRedirect("allUserLeads.jsp");
+			}else {
+				session.setAttribute("msg", "Something went wrong!");
 				response.sendRedirect("allUserLeads.jsp");
 			}
 		}catch(Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
+			session.setAttribute("msg", "Something went wrong!");
+			response.sendRedirect("allUserLeads.jsp");
 		}
 	}
 

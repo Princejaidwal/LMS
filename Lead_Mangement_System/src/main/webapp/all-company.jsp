@@ -93,7 +93,7 @@ List<Company> list = companyDao.getAllCompany(itemsPerPage, (currentPage - 1) * 
 						<%}
 							session.removeAttribute("company-register");
 						}catch(Exception e){
-							System.out.println(e);
+							e.printStackTrace();
 						}%>
 					<table class="table table-dark table-striped table-hover">
 	  					<thead>

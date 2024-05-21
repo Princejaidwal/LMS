@@ -100,7 +100,7 @@ Connection connect = DatabaseConnection.getConnection();
 					session.removeAttribute("update");
 					}
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				} %>
 			<form action = "UpdateSuperAdminProfile" method = "post">
 				<div class="row p-3">
@@ -150,7 +150,7 @@ Connection connect = DatabaseConnection.getConnection();
 					session.removeAttribute("change");
 					}
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				} %>
 				<form action = "ChangeSuperAdminPassword" method = "post">
 					<div class="row p-3">

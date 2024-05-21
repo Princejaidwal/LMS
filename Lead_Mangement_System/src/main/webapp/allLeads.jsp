@@ -106,7 +106,7 @@ List<Lead> list = leadDao.getAllLeadsByLimitOffsetAndCompany(itemsPerPage, (curr
 					session.removeAttribute("adminMsg");
 					}
 					} catch (Exception e) {
-					System.out.println(e);
+						e.printStackTrace();
 					}
 					%>
 					</div>

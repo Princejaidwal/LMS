@@ -59,7 +59,7 @@
 					session.removeAttribute("update");
 					}
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				} %>
 			</div>
 			<form action = "UpdateUserByAdmin" method = "post">

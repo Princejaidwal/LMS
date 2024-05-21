@@ -66,7 +66,6 @@ public class login extends HttpServlet {
 		} catch (Exception e) {
 			session.setAttribute("error", "Wrong Credentials!");
 			response.sendRedirect("index.jsp");
-			System.out.println(e);
 		}
 	}
 

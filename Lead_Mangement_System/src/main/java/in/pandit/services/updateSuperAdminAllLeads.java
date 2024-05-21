@@ -10,9 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import in.pandit.dao.CommentDao;
 import in.pandit.dao.LeadDao;
-import in.pandit.dao.SuperAdminDao;
 import in.pandit.helper.CookiesHelper;
 import in.pandit.model.Lead;
 
@@ -29,7 +27,6 @@ public class updateSuperAdminAllLeads extends HttpServlet {
 		String address = request.getParameter("address").trim();
 		String mobile = request.getParameter("mobile").trim();
 		String source = request.getParameter("source").trim();
-		String date = request.getParameter("date").trim();
 		String owner = request.getParameter("owner").trim();
 		String currentOwner = request.getParameter("currentOwner").trim();
 		String status = request.getParameter("status").trim();

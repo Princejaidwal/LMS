@@ -101,7 +101,7 @@ List<Lead> list = leadDao.getAllLeadsByLimitOffsetAndCompanyAndOwner(itemsPerPag
 					session.removeAttribute("comment");
 					}
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				} %>
 				<%
 					try {
@@ -115,7 +115,7 @@ List<Lead> list = leadDao.getAllLeadsByLimitOffsetAndCompanyAndOwner(itemsPerPag
 					session.removeAttribute("updateMsg");
 					}
 					} catch (Exception e) {
-					System.out.println(e);
+						e.printStackTrace();
 					}
 					%>
 					</div>

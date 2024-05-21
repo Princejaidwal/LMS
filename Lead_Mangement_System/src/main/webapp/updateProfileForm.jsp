@@ -70,7 +70,7 @@ Connection connect = DatabaseConnection.getConnection();
 					session.removeAttribute("userMsg");
 					}
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				} %>
 				<form action = "updateUserProfile" method = "post">
 					<div class="row p-3">
@@ -119,7 +119,7 @@ Connection connect = DatabaseConnection.getConnection();
 					session.removeAttribute("change");
 					}
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				} %>
 				<form action = "ChangeUserPassword" method = "post">
 					<div class="row p-3">

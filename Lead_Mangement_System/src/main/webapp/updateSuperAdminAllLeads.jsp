@@ -70,7 +70,7 @@ Connection connect = DatabaseConnection.getConnection();
 				session.removeAttribute("updateMsg");
 				}
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				} %>
 				
 				<%try{
@@ -83,7 +83,7 @@ Connection connect = DatabaseConnection.getConnection();
 				session.removeAttribute("emailUpdateMsg");
 				}
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				} %>
 				
 				<%try{
@@ -96,7 +96,7 @@ Connection connect = DatabaseConnection.getConnection();
 				session.removeAttribute("mobileUpdateMsg");
 				}
 				}catch(Exception e){
-					System.out.println(e);
+					e.printStackTrace();
 				} %>
 				</div>
 				<form action = "updateSuperAdminAllLeads" method = "post">

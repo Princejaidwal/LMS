@@ -65,19 +65,14 @@ public class helpSuperAdmin extends HttpServlet {
 				message.setText("Comments  : " + comments);
 				// send message
 				Transport.send(message);
-				System.out.println("Message sent Successfully");
-				int inserted = contactDao.insertContact(contact);
-				if(inserted > 0) System.out.println("Contact Inserted Successfully");
-				else System.out.println("Something went wrong!");
+				contactDao.insertContact(contact);
 			}
 			catch (MessagingException e) {
 				throw new RuntimeException(e);
 			}
 			dispatcher = request.getRequestDispatcher("superadmin.jsp");
 			request.setAttribute("messages","Data sent Successfully");
-			//request.setAttribute("connection", con);
 			dispatcher.forward(request, response);
-			//request.setAttribute("status", "success");
 		}
 	}
 

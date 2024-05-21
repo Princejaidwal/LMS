@@ -68,7 +68,7 @@
 				session.removeAttribute("comment");
 				}
 			}catch(Exception e){
-				System.out.println(e);
+				e.printStackTrace();
 			} %>
 			</div>
 			<form action ="AddAdminComment" method="post" class="form-container">
