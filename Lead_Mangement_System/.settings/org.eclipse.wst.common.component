@@ -2,7 +2,6 @@
     <wb-module deploy-name="Lead_Mangement_System">
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-        <wb-resource deploy-path="/WEB-INF/classes/" source-path="/src/main/ImportedClasses"/>
         <property name="context-root" value="Lead_Mangement_System"/>
         <property name="java-output-path" value="/Lead_Mangement_System/build/classes"/>
     </wb-module>
