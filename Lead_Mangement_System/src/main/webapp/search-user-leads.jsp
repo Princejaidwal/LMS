@@ -43,22 +43,22 @@ if (searchBy.equals("id")) {
 	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE email LIKE ? AND companyid=?",
 	search, companyId);
 } else if (searchBy.equals("address")) {
-	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE address=? AND companyid=?", search,
+	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE address LIKE ? AND companyid=?", search,
 	companyId);
 } else if (searchBy.equals("name")) {
-	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE name=? AND companyid=?", search,
+	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE name LIKE ? AND companyid=?", search,
 	companyId);
 } else if (searchBy.equals("mobile")) {
-	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE mobile=? AND companyid=?", search,
+	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE mobile LIKE ? AND companyid=?", search,
 	companyId);
 } else if (searchBy.equals("owner")) {
-	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE owner=? AND companyid=?", search,
+	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE owner LIKE ? AND companyid=?", search,
 	companyId);
 } else if (searchBy.equals("status")) {
-	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE status=? AND companyid=?", search,
+	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE status LIKE ? AND companyid=?", search,
 	companyId);
 } else if (searchBy.equals("currentowner")) {
-	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE currentowner=? AND companyid=?",
+	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE currentowner LIKE ? AND companyid=?",
 	search, companyId);
 }
 int currentPage = (request.getParameter("page") != null) ? Integer.parseInt(request.getParameter("page")) : 1;
@@ -107,7 +107,7 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 							id="searchby" name="searchby" class="form-control text-dark">
 							<option value="id">Id</option>
 							<option value="email">Email</option>
-							<%-- <option value="address">Address</option> --%>
+							<option value="address">Address</option>
 							<option value="name">Name</option>
 							<option value="mobile">Mobile</option>
 							<option value="currentowner">Current Owner</option>
@@ -144,8 +144,10 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 		%>
 		<div class="pe-2 ps-2">
 			<p class="fs-2 text-white box-heading">
-				Total Search Results:
-				<%=leadCount%></p>
+				<%if(list.size() <= 0) {
+				leadCount=0; currentPage=0;
+				}%>All Leads (Total Search Results:
+				<%=leadCount%>, Page <%= currentPage %>)</p>
 		</div>
 		<hr class="divide">
 		<div class="main-container">
@@ -241,12 +243,14 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 				int maxPageButtons = 10; // Change this number to display more or fewer page buttons
 				int startPage = Math.max(1, currentPage - maxPageButtons / 2);
 				int endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
-				for (int i = startPage; i < endPage; i++) {
-				%>
-				<a class='submit-btn w-100'
-					style="padding: 2px 4px; text-decoration: none;"
-					href="/Lead_Mangement_System/search-user-leads.jsp?page=<%=i%>"><%=i%></a>
-				<%
+				if(endPage!=1){
+					for (int i = startPage; i <= endPage; i++) {
+						%>
+						<a class='submit-btn w-100'
+							style="padding: 2px 4px; text-decoration: none;"
+							href="/Lead_Mangement_System/search-user-leads.jsp?page=<%=i%>"><%=i%></a>
+						<%
+						}
 				}
 				%>
 

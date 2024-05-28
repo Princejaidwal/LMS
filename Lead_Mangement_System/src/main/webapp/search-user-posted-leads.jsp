@@ -1,9 +1,10 @@
+<%@page import="org.postgresql.core.CommandCompleteParser"%>
+<%@page import="java.util.Objects"%>
 <%@page import="in.pandit.model.Lead"%>
 <%@page import="java.util.List"%>
-<%@page import="in.pandit.dao.UserDao"%>
 <%@page import="in.pandit.dao.LeadDao"%>
-<%@page import="in.pandit.model.User"%>
 <%@page import="in.pandit.helper.CookiesHelper"%>
+<%@page import="in.pandit.model.User"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@page import="java.sql.DriverManager"%>
@@ -26,55 +27,50 @@ try {
 	search = (String) session.getAttribute("search");
 }
 
-UserDao userDao = new UserDao();
-LeadDao leadDao = new LeadDao();
 User userCookie = CookiesHelper.getUserCookies(request, "user");
-if (!"Admin".equals(userCookie.getIsAdmin())) {
-	session.setAttribute("error", "You are not admin!");
-	response.sendRedirect("index.jsp");
-}
+LeadDao leadDao = new LeadDao();
 int companyId = userCookie.getCompanyId();
-int userCount = userDao.getUserCount("User", companyId);
+int totalLeadCountByStatusFinished = leadDao.getLeadsCountUsingCompanyIdAndStatus(companyId, "Already Enrolled");
 int totalLeadCount = leadDao.getTotalLeadsCountByCompanyId(companyId);
-int totalLeadCountByAssigned = leadDao.getLeadsCountUsingAssigned(userCookie.getEmail(), companyId);
-int totalLeadCountByEnrolled = leadDao.getLeadsCountUsingCompanyIdAndStatus(companyId, "Already Enrolled");
+int totalLeadCountBySource = leadDao.getLeadsCountUsingSourceFacebookOrGoogleAndCompanyId(companyId);
+int totalLeadCountNewLeads = leadDao.getLeadsCountNewLeadsByCompanyId(companyId);
 Connection connect = DatabaseConnection.getConnection();
 
 int leadCount = 0;
 if (searchBy.equals("id")) {
 	leadCount = 1;
 } else if (searchBy.equals("email")) {
-	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE email LIKE ? AND companyid=?",
+	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE email LIKE ? AND companyid=? AND owner='"+userCookie.getEmail()+"'",
 	search, companyId);
 } else if (searchBy.equals("address")) {
-	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE address LIKE ? AND companyid=?",
-	search, companyId);
+	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE address LIKE ? AND companyid=? AND owner='"+userCookie.getEmail()+"'", search,
+	companyId);
 } else if (searchBy.equals("name")) {
-	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE name LIKE ? AND companyid=?",
-	search, companyId);
+	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE name LIKE ? AND companyid=? AND owner='"+userCookie.getEmail()+"'", search,
+	companyId);
 } else if (searchBy.equals("mobile")) {
-	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE mobile LIKE ? AND companyid=?",
-	search, companyId);
+	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE mobile LIKE ? AND companyid=? AND owner='"+userCookie.getEmail()+"'", search,
+	companyId);
 } else if (searchBy.equals("owner")) {
-	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE owner LIKE ? AND companyid=?",
-	search, companyId);
+	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE owner LIKE ? AND companyid=? AND owner='"+userCookie.getEmail()+"'", search,
+	companyId);
 } else if (searchBy.equals("status")) {
-	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE status LIKE ? AND companyid=?",
-	search, companyId);
+	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE status LIKE ? AND companyid=? AND owner='"+userCookie.getEmail()+"'", search,
+	companyId);
 } else if (searchBy.equals("currentowner")) {
-	leadCount = leadDao.getLeadsCountByCompanyId(
-	"SELECT COUNT(id) FROM leads WHERE currentowner LIKE ? AND companyid=?", search, companyId);
+	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE currentowner LIKE ? AND companyid=? AND owner='" +userCookie.getEmail()+"'",
+	search, companyId);
 }
 int currentPage = (request.getParameter("page") != null) ? Integer.parseInt(request.getParameter("page")) : 1;
 int itemsPerPage = 20;
 int totalPages = (int) Math.ceil((double) leadCount / itemsPerPage);
-List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPage - 1) * itemsPerPage, companyId);
+List<Lead> list = leadDao.searchPosted(searchBy, search, itemsPerPage, (currentPage - 1) * itemsPerPage, companyId,userCookie.getEmail());
 %>
 <!Doctype HTML>
 <html>
 <head>
-<title>Search Admin Leads</title>
-<%@include file="./common/jsp/adminhead.jsp"%>
+<title>Search User</title>
+<%@include file="./common/jsp/head.jsp"%>
 </head>
 <body>
 	<%
@@ -82,37 +78,48 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 	if (session.getAttribute("email") == null) {
 	%>
 	<script type="text/javascript">
-			alert('You are no longer logged in');
-		</script>
+		alert('You are no longer logged in');
+	</script>
+	<%
+	response.sendRedirect("index.jsp");
+	}
+	%>
+	<%
+	if (request.getAttribute("messages") != null) {
+	%>
+	<script>
+		swal('Thank You!', 'We will get in touch soon!', 'success')
+	</script>
 	<%
 	}
 	%>
 
-	<%@include file="./common/jsp/adminsidebar.jsp"%>
+	<%@include file="./common/jsp/sidebar.jsp"%>
 	<div id="main">
-		<%@include file="./common/jsp/adminnavbar.jsp"%>
-		<%@include file="./common/jsp/admin-count-card.jsp"%>
-		<div class="main-container p-2">
-			<form action="/Lead_Mangement_System/search-admin-leads.jsp"
-				method="get" class="">
+		<%@include file="./common/jsp/navbar.jsp"%>
+		<%@include file="./common/jsp/count-card.jsp"%>
+		<div class="main-container">
+			<form action="/Lead_Mangement_System/search-user-posted-leads.jsp"
+				method="get">
 				<div class="row">
-					<div class="col-4 text-white d-flex flex-column">
+					<div class="col-4  text-white d-flex flex-column">
 						<label for="searchby" class="h5">Search By:</label> <select
 							id="searchby" name="searchby" class="form-control text-dark">
 							<option value="id">Id</option>
 							<option value="email">Email</option>
-							<%-- <option value="address">Address</option> --%>
+							<option value="address">Address</option>
 							<option value="name">Name</option>
 							<option value="mobile">Mobile</option>
-							<option value="owner">Owner</option>
 							<option value="currentowner">Current Owner</option>
+							<option value="owner">Owner</option>
 							<option value="status">Status</option>
 						</select>
 					</div>
-					<div class="col-6  text-white d-flex flex-column">
+					<div class="col-6 text-white d-flex flex-column">
 						<label for="search" class="h5">Search Lead:</label> <input
 							id="search" name="search" placeholder="Search Lead " type="text"
 							class="form-control text-dark" />
+
 					</div>
 					<input id="page" name="page" value="<%=currentPage%>"
 						hidden="true" />
@@ -128,53 +135,40 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 				</div>
 			</form>
 		</div>
+		<%
+		if (list.size() == 0) {
+		%>
+		<h1 class="text-white">Record Not found</h1>
+		<%
+		} else {
+		%>
 		<div class="pe-2 ps-2">
 			<p class="fs-2 text-white box-heading">
-				<%if(list.size() <= 0) {
+			<%if(list.size() <= 0) {
 				leadCount=0; currentPage=0;
-				}%>All Leads (Total Search Results:
-				<%=leadCount%>, Page <%= currentPage %>)
-			</p>
+				}%>
+				Posted Leads (Total Search Results:
+				<%=leadCount%>, Page <%= currentPage %>)</p>
 		</div>
 		<hr class="divide">
 		<div class="main-container">
-			<%
-			if (list.size() <= 0) {
-			%>
-			<div class="p-2 w-100 text-white">
-				<h3>No Leads to show</h3>
-				<a href="admin.jsp" class='submit-btn w-100 '
-					style="text-decoration: none;">Add Lead</a>
+			<div class="p-2">
+				<%
+				try {
+					String userMsg = (String) session.getAttribute("userMsg");
+					if (userMsg != null) {
+				%>
+				<div class='alert alert-success alert-dismissible fade show'>
+					<%=userMsg%>
+				</div>
+				<%
+				session.removeAttribute("userMsg");
+				}
+				} catch (Exception e) {
+				e.printStackTrace();
+				}
+				%>
 			</div>
-			<%
-			} else {
-			%>
-			<%
-			try {
-				String success = (String) session.getAttribute("msg");
-				if (success != null) {
-					out.print("<div class='alert alert-success alert-dismissible fade show'>"
-					+ "<button type='button' class='close' data-dismiss='alert'>×</button>"
-					+ " <strong>Alert!</strong> Data deleted Successfully </div>");
-				}
-				session.removeAttribute("msg");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			%>
-			<%
-			try {
-				String success = (String) session.getAttribute("updateMsg");
-				if (success != null) {
-					out.print("<div class='alert alert-success alert-dismissible fade show alert1'>"
-					+ "<button type='button' class='close' data-dismiss='alert'>×</button>"
-					+ " <strong>Success!</strong> Data updated Successfully </div>");
-				}
-				session.removeAttribute("updateMsg");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			%>
 			<table class="table table-dark table-striped table-hover"
 				id="table-id">
 				<thead>
@@ -183,12 +177,15 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 						<th>Name</th>
 						<th>Email</th>
 						<th>Status</th>
+						<th>Source</th>
 						<th>Date</th>
 						<th>Mobile</th>
 						<th>Current Owner</th>
 						<th>Owner</th>
+						<th>Salary</th>
+						<th>Experience</th>
+						<th>Education</th>
 						<th>Comment</th>
-						<th colspan="2">Action</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -200,31 +197,26 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 						<td><%=l.getName()%></td>
 						<td><%=l.getEmail()%></td>
 						<td><%=l.getStatus()%></td>
-						<td><%=l.getCreationDate()%></td>
+						<td><%=l.getSource()%></td>
+						<td><%=l.getCreationDate().toGMTString()%></td>
 						<td><%=l.getMobile()%></td>
 						<td><%=l.getCurrentowner()%></td>
 						<td><%=l.getOwner()%></td>
+						<td><%=l.getSalary()%></td>
+						<td><%=l.getExperience()%></td>
+						<td><%=l.getEducation()%></td>
 						<td>
-							<form
-								action="show-admin-lead-comment.jsp?leadid=<%=l.getId()%>"
+							<form action="show-user-lead-comment.jsp?leadid=<%=l.getId()%>"
 								method='post'>
 								<button type='submit' class='submit-btn w-100'
 									name='view-comment' value="<%=l.getEmail()%>">View</button>
 							</form>
 							<form class="mt-2"
-								action='add-admin-comment.jsp?leadid=<%=l.getId()%>&useremail=<%=l.getEmail()%>'
+								action='add-comment.jsp?leadid=<%=l.getId()%>&useremail=<%=l.getEmail()%>'
 								method='post'>
 								<button type='submit' class='submit-btn w-100'
 									name='add-comment' value="<%=l.getEmail()%>">Add</button>
 							</form>
-						</td>
-						<td>
-							<form action='updateAdminAllLeads.jsp' method='post'>
-								<button type='submit' class='submit-btn w-100' name='update'
-									value="<%=l.getId()%>">Update</button>
-							</form>
-							<button class='submit-btn w-100 mt-2' name='delete'
-								onclick='myFunction(<%=l.getId()%>)'>Delete</button>
 						</td>
 					</tr>
 					<%
@@ -242,7 +234,7 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 				%>
 				<a class='submit-btn w-100'
 					style="padding: 2px 4px; text-decoration: none;"
-					href="/Lead_Mangement_System/search-admin-leads.jsp?page=<%=currentPage - 1%>">
+					href="/Lead_Mangement_System/search-user-posted-leads.jsp?page=<%=currentPage - 1%>">
 					&lt; Previous</a>
 				<%
 				}
@@ -252,14 +244,14 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 				int maxPageButtons = 10; // Change this number to display more or fewer page buttons
 				int startPage = Math.max(1, currentPage - maxPageButtons / 2);
 				int endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
-				if (endPage != 1) {
+				if(endPage!=1){
 					for (int i = startPage; i <= endPage; i++) {
-				%>
-				<a class='submit-btn w-100'
-					style="padding: 2px 4px; text-decoration: none;"
-					href="/Lead_Mangement_System/search-admin-leads.jsp?page=<%=i%>"><%=i%></a>
-				<%
-				}
+						%>
+						<a class='submit-btn w-100'
+							style="padding: 2px 4px; text-decoration: none;"
+							href="/Lead_Mangement_System/search-user-posted-leads.jsp?page=<%=i%>"><%=i%></a>
+						<%
+						}
 				}
 				%>
 
@@ -268,7 +260,7 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 				%>
 				<a class='submit-btn w-100'
 					style="padding: 2px 4px; text-decoration: none;"
-					href="/Lead_Mangement_System/search-admin-leads.jsp?page=<%=currentPage + 1%>">Next
+					href="/Lead_Mangement_System/search-user-posted-leads.jsp?page=<%=currentPage + 1%>">Next
 					&gt;</a>
 				<%
 				}
@@ -276,24 +268,19 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 			</div>
 		</div>
 	</div>
-	<script>         
-/* Alert message code */
-	$(document).ready(function () {  
-	           $(".close").click(function () {  
-	               $("#myAlert").alert("close");  
-	           });  
-	       });
-	       
-	/* Delete confirmation alert */
-		function myFunction(id) {
-			if(confirm("Are you sure want to delete?") == true){
-				window.location.href = "/Lead_Mangement_System/deleteAdminLeads?delete="+id ;
-			}else{
-				alert("Canceled!");
-				
-			}
+	<script>
+		/* Alert message code */
+		$(document).ready(function() {
+			$(".close").click(function() {
+				$("#myAlert").alert("close");
+			});
+		});
+
+		/* Delete confirmation alert */
+		function myFunction() {
+			confirm("Are you sure want to delete?");
 		}
 	</script>
-	<%@include file="./common/jsp/adminfooter.jsp"%>
+	<%@include file="./common/jsp/footer.jsp"%>
 </body>
 </html>

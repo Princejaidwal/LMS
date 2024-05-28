@@ -62,7 +62,7 @@ List<Lead> list = leadDao.getAllLeadsByLimitOffsetAndCompanyAndOwner(itemsPerPag
 		<%@include file="./common/jsp/navbar.jsp"%>
 		<%@include file="./common/jsp/count-card.jsp"%>
 		<div class="main-container p-2">
-			<form action="/Lead_Mangement_System/search-user-leads.jsp"
+			<form action="/Lead_Mangement_System/search-user-posted-leads.jsp"
 				method="get">
 				<div class="row">
 					<div class="col-4 text-white d-flex flex-column">
@@ -70,7 +70,6 @@ List<Lead> list = leadDao.getAllLeadsByLimitOffsetAndCompanyAndOwner(itemsPerPag
 							id="searchby" name="searchby" class="form-control text-dark">
 							<option value="id">Id</option>
 							<option value="email">Email</option>
-							<%-- <option value="address">Address</option> --%>
 							<option value="name">Name</option>
 							<option value="mobile">Mobile</option>
 							<option value="owner">Owner</option>
@@ -96,7 +95,9 @@ List<Lead> list = leadDao.getAllLeadsByLimitOffsetAndCompanyAndOwner(itemsPerPag
 			</form>
 		</div>
 		<div class="pe-2 ps-2">
-			<p class="fs-2 text-white box-heading">Posted Leads</p>
+			<p class="fs-2 text-white box-heading"><%if(list.size() <= 0) {
+				totalPostedLeadCount=0; currentPage=0;
+				}%>All Posted Leads (Total Results: <%= totalPostedLeadCount %>, Page <%= currentPage %>)</p>
 		</div>
 		<hr class="divide">
 		<div class="main-container">
@@ -195,12 +196,14 @@ List<Lead> list = leadDao.getAllLeadsByLimitOffsetAndCompanyAndOwner(itemsPerPag
 					int maxPageButtons = 10; // Change this number to display more or fewer page buttons
 					int startPage = Math.max(1, currentPage - maxPageButtons / 2);
 					int endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
-					for (int i = startPage; i <= endPage; i++) {
-					%>
-					<a class='submit-btn w-100'
-						style="padding: 2px 4px; text-decoration: none;"
-						href="/Lead_Mangement_System/posted-lead-user.jsp?page=<%=i%>"><%=i%></a>
-					<%
+					if(endPage!=1){
+						for (int i = startPage; i <= endPage; i++) {
+							%>
+							<a class='submit-btn w-100'
+								style="padding: 2px 4px; text-decoration: none;"
+								href="/Lead_Mangement_System/posted-lead-user.jsp?page=<%=i%>"><%=i%></a>
+							<%
+							}
 					}
 					%>
 

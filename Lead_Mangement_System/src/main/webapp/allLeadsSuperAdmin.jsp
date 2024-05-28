@@ -107,7 +107,8 @@ List<Lead> list = leadDao.getAllLeadsByLimit(itemsPerPage, (currentPage - 1) * i
 			</form>
 		</div>
 		<div class="pe-2 ps-2">
-			<p class="fs-2 text-white box-heading">All Leads (Page : <%= currentPage %>)</p>
+			<p class="fs-2 text-white box-heading">All Leads (Total Results: <%= totalLeadCount
+					%>, Page <%= currentPage %>)</p>
 		</div>
 		<hr class="divide">		
 		<div class="main-container">
@@ -186,14 +187,12 @@ List<Lead> list = leadDao.getAllLeadsByLimit(itemsPerPage, (currentPage - 1) * i
 					int maxPageButtons = 10; // Change this number to display more or fewer page buttons
 					int startPage = Math.max(1, currentPage - maxPageButtons / 2);
 					int endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
-					if(endPage!=1){
-						for (int i = startPage; i <= endPage; i++) {
-							%>
-							<a class='submit-btn w-100'
-								style="padding: 2px 4px; text-decoration: none;"
-								href="/Lead_Mangement_System/allLeadsSuperAdmin.jsp?page=<%=i%>"><%=i%></a>
-							<%
-							}
+					for (int i = startPage; i <= endPage; i++) {
+					%>
+					<a class='submit-btn w-100'
+						style="padding: 2px 4px; text-decoration: none;"
+						href="/Lead_Mangement_System/allLeadsSuperAdmin.jsp?page=<%=i%>"><%=i%></a>
+					<%
 					}
 					%>
 

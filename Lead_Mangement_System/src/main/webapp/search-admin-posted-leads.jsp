@@ -37,6 +37,7 @@ int companyId = userCookie.getCompanyId();
 int userCount = userDao.getUserCount("User", companyId);
 int totalLeadCount = leadDao.getTotalLeadsCountByCompanyId(companyId);
 int totalLeadCountByAssigned = leadDao.getLeadsCountUsingAssigned(userCookie.getEmail(), companyId);
+int totalLeadCountByPosted = leadDao.getLeadsCountUsingPosted(userCookie.getEmail(), companyId);
 int totalLeadCountByEnrolled = leadDao.getLeadsCountUsingCompanyIdAndStatus(companyId, "Already Enrolled");
 Connection connect = DatabaseConnection.getConnection();
 
@@ -73,7 +74,7 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 <!Doctype HTML>
 <html>
 <head>
-<title>Search Admin Leads</title>
+<title>Search Admin Posted Leads</title>
 <%@include file="./common/jsp/adminhead.jsp"%>
 </head>
 <body>
@@ -93,7 +94,7 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 		<%@include file="./common/jsp/adminnavbar.jsp"%>
 		<%@include file="./common/jsp/admin-count-card.jsp"%>
 		<div class="main-container p-2">
-			<form action="/Lead_Mangement_System/search-admin-leads.jsp"
+			<form action="/Lead_Mangement_System/search-admin-posted-leads.jsp"
 				method="get" class="">
 				<div class="row">
 					<div class="col-4 text-white d-flex flex-column">
@@ -101,7 +102,6 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 							id="searchby" name="searchby" class="form-control text-dark">
 							<option value="id">Id</option>
 							<option value="email">Email</option>
-							<%-- <option value="address">Address</option> --%>
 							<option value="name">Name</option>
 							<option value="mobile">Mobile</option>
 							<option value="owner">Owner</option>
@@ -131,8 +131,8 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 		<div class="pe-2 ps-2">
 			<p class="fs-2 text-white box-heading">
 				<%if(list.size() <= 0) {
-				leadCount=0; currentPage=0;
-				}%>All Leads (Total Search Results:
+				leadCount =0; currentPage=0;
+				}%>Posted Leads (Total Search Results:
 				<%=leadCount%>, Page <%= currentPage %>)
 			</p>
 		</div>
@@ -242,7 +242,7 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 				%>
 				<a class='submit-btn w-100'
 					style="padding: 2px 4px; text-decoration: none;"
-					href="/Lead_Mangement_System/search-admin-leads.jsp?page=<%=currentPage - 1%>">
+					href="/Lead_Mangement_System/search-admin-posted-leads.jsp?page=<%=currentPage - 1%>">
 					&lt; Previous</a>
 				<%
 				}
@@ -257,7 +257,7 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 				%>
 				<a class='submit-btn w-100'
 					style="padding: 2px 4px; text-decoration: none;"
-					href="/Lead_Mangement_System/search-admin-leads.jsp?page=<%=i%>"><%=i%></a>
+					href="/Lead_Mangement_System/search-admin-posted-leads.jsp?page=<%=i%>"><%=i%></a>
 				<%
 				}
 				}
@@ -268,7 +268,7 @@ List<Lead> list = leadDao.searchLead(searchBy, search, itemsPerPage, (currentPag
 				%>
 				<a class='submit-btn w-100'
 					style="padding: 2px 4px; text-decoration: none;"
-					href="/Lead_Mangement_System/search-admin-leads.jsp?page=<%=currentPage + 1%>">Next
+					href="/Lead_Mangement_System/search-admin-posted-leads.jsp?page=<%=currentPage + 1%>">Next
 					&gt;</a>
 				<%
 				}

@@ -76,7 +76,9 @@ List<Lead> list = leadDao.getAllLeadsByLimitOffsetAndCompany(itemsPerPage, (curr
 			</form>
 		</div>
 		<div class="pe-2 ps-2">
-			<p class="fs-2 text-white box-heading">All Leads</p>
+			<p class="fs-2 text-white box-heading"><%if(list.size() <= 0) {
+				totalLeadCount=0; currentPage=0;
+				}%>All Leads (Total Results: <%= totalLeadCount %>, Page <%= currentPage %>)</p>
 		</div>
 		<hr class="divide">		
 		<div class="main-container">

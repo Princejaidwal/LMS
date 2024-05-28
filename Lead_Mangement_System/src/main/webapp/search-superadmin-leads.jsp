@@ -41,24 +41,24 @@ int leadCount = 0;
 if(searchBy.equals("id")){
 	leadCount = 1;
 }else if(searchBy.equals("email")){
-	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE email LIKE ?", search);
+	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE email=?", search);
 }else if(searchBy.equals("address")){
-	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE address LIKE ?", search);
+	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE address=?", search);
 }else if(searchBy.equals("name")){
-	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE name LIKE ?", search);
+	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE name=?", search);
 }else if(searchBy.equals("mobile")){
-	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE mobile LIKE ?", search);
+	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE mobile=?", search);
 }else if(searchBy.equals("owner")){
-	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE owner LIKE ?", search);
+	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE owner=?", search);
 }else if(searchBy.equals("status")){
-	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE status LIKE ?", search);
+	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE status=?", search);
 }else if(searchBy.equals("currentowner")){
-	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE currentowner LIKE ?", search);
+	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE currentowner=? AND companyid=?", search, companyId);
 }
 int currentPage = (request.getParameter("page") != null) ? Integer.parseInt(request.getParameter("page")) : 1;
 int itemsPerPage = 20;
 int totalPages = (int) Math.ceil((double) leadCount / itemsPerPage);
-List<Lead> list = leadDao.searchLeadSuperadmin(searchBy, search,itemsPerPage, (currentPage - 1) * itemsPerPage);
+List<Lead> list = leadDao.searchLead(searchBy, search,itemsPerPage, (currentPage - 1) * itemsPerPage,companyId);
 
 %>
 <!Doctype HTML>
@@ -518,6 +518,7 @@ table tr:nth-child(even){
 							<select id="searchby" name="searchby" class="form-control text-dark" >
 								<option value="id">Id</option>
 								<option value="email">Email</option>
+								<%-- <option value="address">Address</option> --%>
 								<option value="name">Name</option>
 								<option value="mobile">Mobile</option>
 								<option value="owner">Owner</option>
@@ -546,8 +547,7 @@ table tr:nth-child(even){
 					<h1 class="text-white">Record Not found</h1>
 				<% } else{%>
 				
-				<p>All Leads (Total Search Results:
-				<%= leadCount %>, Page <%= currentPage %>)</p>
+				<p>All Leads</p>
 				
 
 		<div class="container-fluid">
@@ -633,7 +633,7 @@ table tr:nth-child(even){
 					%>
 					<a class='submit-btn w-100'
 						style="padding: 2px 4px; text-decoration: none;"
-						href="/Lead_Mangement_System/search-superadmin-leads.jsp?page=<%=currentPage - 1%>">
+						href="/Lead_Mangement_System/posted-lead-user.jsp?page=<%=currentPage - 1%>">
 						&lt; Previous</a>
 					<%
 					}

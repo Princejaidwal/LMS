@@ -50,7 +50,7 @@ List<Lead> list = leadDao.getAllLeadsByLimitCurrentOwnerAndCompany(itemsPerPage,
 		<%@include file="./common/jsp/navbar.jsp" %>
 		<%@include file="./common/jsp/count-card.jsp" %>
 		<div class="main-container p-2">
-			<form action="/Lead_Mangement_System/search-user-leads.jsp" method="get">
+			<form action="/Lead_Mangement_System/search-user-assigned-leads.jsp" method="get">
 				<div class="row">
 					<div class="col-4 text-white d-flex flex-column">
 						<label for="searchby" class="h5">Search By:</label>
@@ -77,7 +77,7 @@ List<Lead> list = leadDao.getAllLeadsByLimitCurrentOwnerAndCompany(itemsPerPage,
 			</form>
 		</div>
 		<div class="pe-2 ps-2">
-			<p class="fs-2 text-white box-heading">Assigned Leads</p>
+			<p class="fs-2 text-white box-heading">All Assigned Leads (Total Results: <%= totalLeadCountBySource %>, Page <%= currentPage %>)</p>
 		</div>
 		<hr class="divide">
 		<div class="main-container">
@@ -159,12 +159,14 @@ List<Lead> list = leadDao.getAllLeadsByLimitCurrentOwnerAndCompany(itemsPerPage,
 					int maxPageButtons = 10; // Change this number to display more or fewer page buttons
 					int startPage = Math.max(1, currentPage - maxPageButtons / 2);
 					int endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
-					for (int i = startPage; i <= endPage; i++) {
-					%>
-					<a class='submit-btn w-100'
-						style="padding: 2px 4px; text-decoration: none;"
-						href="/Lead_Mangement_System/currentLead.jsp?page=<%=i%>"><%=i%></a>
-					<%
+					if(endPage!=1){
+						for (int i = startPage; i <= endPage; i++) {
+							%>
+							<a class='submit-btn w-100'
+								style="padding: 2px 4px; text-decoration: none;"
+								href="/Lead_Mangement_System/currentLead.jsp?page=<%=i%>"><%=i%></a>
+							<%
+							}
 					}
 					%>
 

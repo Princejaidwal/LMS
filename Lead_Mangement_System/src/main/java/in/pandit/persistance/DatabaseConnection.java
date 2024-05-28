@@ -10,7 +10,7 @@ public class DatabaseConnection {
 		try {
 			String url = "jdbc:postgresql://localhost:5432/LMS";
 			String user = "postgres";
-			String pass = "root";
+			String pass = "1188";
 			Class.forName("org.postgresql.Driver");
 			conn = DriverManager.getConnection(url, user, pass);
 		}catch(Exception e) {
