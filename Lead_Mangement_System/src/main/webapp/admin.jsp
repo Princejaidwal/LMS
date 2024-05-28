@@ -23,8 +23,8 @@
 	}
  	int companyId = userCookie.getCompanyId();
 	int totalLeadCount = leadDao.getTotalLeadsCountByCompanyId(companyId);
-	int totalLeadCountByFacebookSource = leadDao.getLeadsCountUsingSourceAndCompany("facebook", companyId);
-	int totalLeadCountByGoogleSource = leadDao.getLeadsCountUsingSourceAndCompany("google", companyId);
+	int totalLeadCountByAssigned = leadDao.getLeadsCountUsingAssigned(userCookie.getEmail(), companyId);
+	int totalLeadCountByEnrolled = leadDao.getLeadsCountUsingCompanyIdAndStatus(companyId, "Already Enrolled");
 	int userCount = userDao.getUserCount("User", companyId);
 	Connection connect = DatabaseConnection.getConnection();
 	List<String> lst1 = userDao.getAllEmailByIsAdminAndCompanyId("User", "Admin", companyId);

@@ -23,11 +23,10 @@
 	}
 	int companyId = userCookie.getCompanyId();
 	int totalLeadCount = leadDao.getTotalLeadsCountByCompanyId(companyId);
-	int totalLeadCountByFacebookSource = leadDao.getLeadsCountUsingSourceAndCompany("facebook", companyId);
-	int totalLeadCountByGoogleSource = leadDao.getLeadsCountUsingSourceAndCompany( "google",companyId);	
-	int userCount = userDao.getUserCount("User", companyId);
+	int totalLeadCountByAssigned = leadDao.getLeadsCountUsingAssigned(userCookie.getEmail(), companyId);
+	int totalLeadCountByEnrolled = leadDao.getLeadsCountUsingCompanyIdAndStatus(companyId, "Already Enrolled");	int userCount = userDao.getUserCount("User", companyId);
 	int currentPage = (request.getParameter("page") != null) ? Integer.parseInt(request.getParameter("page")) : 1;
-	int itemsPerPage = 10;
+	int itemsPerPage = 20;
 	int totalPages = (int) Math.ceil((double) userCount / itemsPerPage);
 
 	Connection connect = DatabaseConnection.getConnection();

@@ -91,7 +91,7 @@ Connection connect = DatabaseConnection.getConnection();
 						<div class="comment-content">
 				            <h5>Posted By : <%= UserDao.getUserNameByEmail(comment.getUseremail(),companyId) %></h5>
 				            <p>Comment : <%= comment.getComment() %></p>
-				            <h5>Posted on : <%= comment.getCreationDate() %></h5>
+				            <h5>Posted on : <%= comment.getCreationDate().toLocaleString() %></h5>
 				        </div>
 				        <%if(comment.getUserid() == user.getId()) {%>
 					        <div class="btn-container">

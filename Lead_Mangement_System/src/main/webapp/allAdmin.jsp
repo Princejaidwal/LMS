@@ -28,7 +28,7 @@ int companyCount = companyDao.getAllCompanyCount();
 int totalLeadCount = superAdminDao.getTotalLeadsCount();
 Connection connect = DatabaseConnection.getConnection();
 int currentPage = (request.getParameter("page") != null) ? Integer.parseInt(request.getParameter("page")) : 1;
-int itemsPerPage = 10;
+int itemsPerPage = 20;
 int totalPages = (int) Math.ceil((double) adminCount / itemsPerPage);
 List<User> userList = superAdminDao.getAllUserByLimitAndOffset(itemsPerPage, (currentPage - 1) * itemsPerPage,"Admin");
 

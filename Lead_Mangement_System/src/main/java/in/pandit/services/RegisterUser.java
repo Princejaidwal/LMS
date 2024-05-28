@@ -69,7 +69,7 @@ public class RegisterUser extends HttpServlet {
 			pw.print("Something wrong with database");
 		}
 		}catch(Exception e) {
-			e.printStackTrace()
+			e.printStackTrace();
 		}
 		
 		

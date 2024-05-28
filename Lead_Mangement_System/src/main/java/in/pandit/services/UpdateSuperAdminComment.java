@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import in.pandit.dao.CommentDao;
+import in.pandit.dao.LeadDao;
 import in.pandit.model.Comment;
+import in.pandit.model.Lead;
 
 @WebServlet("/UpdateSuperAdminComment")
 public class UpdateSuperAdminComment extends HttpServlet {
@@ -18,12 +20,18 @@ public class UpdateSuperAdminComment extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int commentId = Integer.parseInt(request.getParameter("comment-id"));
+		LeadDao leadDao = new LeadDao();
+
 		String comment = request.getParameter("comment");
+		String status = request.getParameter("status");
 		CommentDao commentDao = new CommentDao();
 		Comment comments = commentDao.getCommentByCommentId(commentId);
+		Lead lead = leadDao.getLeadById(comments.getLeadid());
 		if(Objects.nonNull(comments)) {
+			lead.setStatus(status);
 			comments.setComment(comment);
 			commentDao.updateComment(comments);
+			leadDao.updateLead(lead);
 		}
 		response.sendRedirect("allLeadsSuperAdmin.jsp");
 	}

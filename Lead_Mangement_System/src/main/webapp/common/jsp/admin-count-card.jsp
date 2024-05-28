@@ -15,16 +15,16 @@
 	</div>
 	<div class="d-flex text-white align-items-center justify-content-around status-card">
 		<div class="d-flex flex-column">
-			<span  class="fs-2 fw-bold"><%= totalLeadCountByFacebookSource %></span>
-			<span>Facebook Leads</span>
+			<span  class="fs-2 fw-bold"><%= totalLeadCountByAssigned %></span>
+			<span>Assigned Leads</span>
 		</div>
-		<i class="fa fa-facebook-square box-icon"></i>
+		<i class="fa fa-users box-icon"></i>
 	</div>
 	<div class="d-flex text-white align-items-center justify-content-around status-card">
 		<div class="d-flex flex-column">
-			<span  class="fs-2 fw-bold"><%= totalLeadCountByGoogleSource %></span>
-			<span>Google Leads</span>
+			<span  class="fs-2 fw-bold"><%= totalLeadCountByEnrolled %></span>
+			<span>Enrolled Leads</span>
 		</div>
-		<i class="fa fa-google-plus box-icon"></i>
+		<i class="fa fa-users box-icon"></i>
 	</div>
 </div>

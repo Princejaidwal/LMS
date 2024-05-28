@@ -3,7 +3,7 @@
 <div id="mySidenav" class="sidenav">
 		<p class="logo"><span>L </span>M S</p>
 	  <a href="superadmin.jsp" class="icon-a"><i class="fa fa-dashboard icons"></i>   Dashboard</a>
-	  <%-- <a href="allLeadsSuperAdmin.jsp"class="icon-a"><i class="fa fa-line-chart icons"></i>   All Leads</a> --%>
+	  <a href="allLeadsSuperAdmin.jsp"class="icon-a"><i class="fa fa-line-chart icons"></i>   All Leads</a>
 	  <a href="all-company.jsp"class="icon-a"><i class="fa fa-building icons"></i>   All Companies</a>
 	  <a href="allAdmin.jsp"class="icon-a"><i class="fa fa-user-circle icons"></i>   All Admins</a>
 	  <a href="allUsersSuperAdmin.jsp"class="icon-a"><i class="fa fa-users icons"></i>   All Users</a>

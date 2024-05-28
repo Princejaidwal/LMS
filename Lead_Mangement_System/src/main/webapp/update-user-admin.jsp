@@ -20,9 +20,8 @@
 	User user = userDao.getUserByEmail(userEmail,companyId);
 	CookiesHelper.setCookies(user, response, "userInfo");
 	int totalLeadCount = leadDao.getTotalLeadsCountByCompanyId(companyId);
-	int totalLeadCountByFacebookSource = leadDao.getLeadsCountUsingSourceAndCompany("facebook", companyId);
-	int totalLeadCountByGoogleSource = leadDao.getLeadsCountUsingSourceAndCompany( "google",companyId);
-	int userCount = userDao.getUserCount("User", companyId);
+	int totalLeadCountByAssigned = leadDao.getLeadsCountUsingAssigned(userCookie.getEmail(), companyId);
+	int totalLeadCountByEnrolled = leadDao.getLeadsCountUsingCompanyIdAndStatus(companyId, "Already Enrolled");	int userCount = userDao.getUserCount("User", companyId);
 	Connection connect = DatabaseConnection.getConnection();
 	
 %>

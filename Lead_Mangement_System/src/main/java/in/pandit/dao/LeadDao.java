@@ -20,8 +20,11 @@ public class LeadDao {
 	private static final String TOTAL_LEADS_USING_COMPANY_ID = "SELECT COUNT(id) FROM leads WHERE companyid=?";
 	private static final String TOTAL_LEADS = "SELECT COUNT(id) FROM leads";
 	private static final String TOTAL_LEADS_COUNT_SOURCE = "SELECT COUNT(id) FROM leads WHERE source=?  AND companyid=?";
-	private static final String TOTAL_LEADS_COUNT_SOURCE_FACEBOOK_OR_GOOGLE = "SELECT COUNT(id) FROM leads WHERE (source=? OR source=?) AND companyid=?";
-	private static final String TOTAL_LEADS_COUNT_NEW_LEADS = "SELECT COUNT(id) FROM leads WHERE creation_date::date = CURRENT_DATE  AND companyid=?";
+	private static final String TOTAL_LEADS_COUNT_SOURCE_FACEBOOK_OR_GOOGLE = "SELECT COUNT(id) FROM leads WHERE (source = ? OR source =?) AND companyid=?";
+	private static final String TOTAL_LEADS_COUNT_ASSIGNED = "SELECT COUNT(id) FROM leads WHERE currentowner = ? AND companyid=?";
+	private static final String TOTAL_LEADS_COUNT_POSTED = "SELECT COUNT(id) FROM leads WHERE owner = ? AND companyid=?";
+//	private static final String TOTAL_LEADS_COUNT_NEW_LEADS = "SELECT COUNT(id) FROM leads WHERE creation_date::date = CURRENT_DATE  AND companyid=?";
+	private static final String TOTAL_LEADS_COUNT_NEW_LEADS = "SELECT COUNT(id) FROM leads WHERE status = ?  AND companyid=?";
 	
 	private static final String GET_ALL_LEADS_BY_OFFSET_AND_LIMIT = "SELECT * FROM leads  WHERE companyid=? ORDER BY id DESC LIMIT ? OFFSET ? ";
 	private static final String GET_LEADS_BY_OFFSET_AND_LIMIT = "SELECT * FROM leads ORDER BY id DESC LIMIT ? OFFSET ? ";
@@ -324,6 +327,7 @@ public class LeadDao {
 		int count = 0;
 		try {
 			pst = con.prepareStatement(query);
+			countBy = "%"+countBy+"%";
 			pst.setString(1, countBy);
 			pst.setInt(2, companyId);
 			ResultSet rst = pst.executeQuery();
@@ -398,6 +402,38 @@ public class LeadDao {
 		}
 		return count;
 	}
+	public int getLeadsCountUsingAssigned(String currentOwner, int companyId) {
+		int count = 0;
+		try {
+			pst = con.prepareStatement(TOTAL_LEADS_COUNT_ASSIGNED);
+			pst.setString(1, currentOwner);
+			pst.setInt(2, companyId);
+			ResultSet rst = pst.executeQuery();
+			if (rst.next()) {
+				count = rst.getInt(1);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return count;
+	}
+	public int getLeadsCountUsingPosted(String owner, int companyId) {
+		int count = 0;
+		try {
+			pst = con.prepareStatement(TOTAL_LEADS_COUNT_POSTED);
+			pst.setString(1, owner);
+			pst.setInt(2, companyId);
+			ResultSet rst = pst.executeQuery();
+			if (rst.next()) {
+				count = rst.getInt(1);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return count;
+	}
 	/* *********************************************************
 	 * ****** GET LEAD COUNT USING USER ID FOR ADMIN(COMPANY) **
 	 * *********************************************************
@@ -406,7 +442,8 @@ public class LeadDao {
 		int count = 0;
 		try {
 			pst = con.prepareStatement(TOTAL_LEADS_COUNT_NEW_LEADS);
-			pst.setInt(1, companyId);
+			pst.setString(1, "New");
+			pst.setInt(2, companyId);
 			ResultSet rst = pst.executeQuery();
 			if (rst.next()) {
 				count = rst.getInt(1);
@@ -580,13 +617,20 @@ public class LeadDao {
 //	GET LEADS BY OWNER
 //	GET LEADS BY EMAIL
 	public static final String SEARCH_LEADS_BY_ID_OFFSET_AND_LIMIT = "SELECT * FROM leads WHERE companyid=? AND id=? ORDER BY id DESC LIMIT ? OFFSET ? ";
+	public static final String SEARCH_LEADS_BY_ID_OFFSET_AND_LIMIT_SUPERADMIN = "SELECT * FROM leads WHERE id=? ORDER BY id DESC LIMIT ? OFFSET ? ";
 	public static final String SEARCH_LEADS_BY_EMAIL_OFFSET_AND_LIMIT = "SELECT * FROM leads WHERE companyid=? AND email ILIKE ? ORDER BY id DESC LIMIT ? OFFSET ? ";
+	public static final String SEARCH_LEADS_BY_EMAIL_OFFSET_AND_LIMIT_SUPERADMIN = "SELECT * FROM leads WHERE email ILIKE ? ORDER BY id DESC LIMIT ? OFFSET ? ";
 	public static final String SEARCH_LEADS_BY_ADDRESS_OFFSET_AND_LIMIT = "SELECT * FROM leads WHERE companyid=? AND address ILIKE ? ORDER BY id DESC LIMIT ? OFFSET ? ";
 	public static final String SEARCH_LEADS_BY_MOBILE_OFFSET_AND_LIMIT = "SELECT * FROM leads WHERE companyid=? AND mobile ILIKE ? ORDER BY id DESC LIMIT ? OFFSET ? ";
+	public static final String SEARCH_LEADS_BY_MOBILE_OFFSET_AND_LIMIT_SUPERADMIN = "SELECT * FROM leads WHERE mobile ILIKE ? ORDER BY id DESC LIMIT ? OFFSET ? ";
 	public static final String SEARCH_LEADS_BY_STATUS_OFFSET_AND_LIMIT = "SELECT * FROM leads WHERE companyid=? AND status ILIKE ? ORDER BY id DESC LIMIT ? OFFSET ? ";
+	public static final String SEARCH_LEADS_BY_STATUS_OFFSET_AND_LIMIT_SUPERADMIN = "SELECT * FROM leads WHERE status ILIKE ? ORDER BY id DESC LIMIT ? OFFSET ? ";
+	public static final String SEARCH_LEADS_BY_CURRENT_OWNER_OFFSET_AND_LIMIT_SUPERADMIN = "SELECT * FROM leads WHERE currentowner ILIKE ? ORDER BY id DESC LIMIT ? OFFSET ? ";
 	public static final String SEARCH_LEADS_BY_CURRENT_OWNER_OFFSET_AND_LIMIT = "SELECT * FROM leads WHERE companyid=? AND currentowner ILIKE ? ORDER BY id DESC LIMIT ? OFFSET ? ";
 	public static final String SEARCH_LEADS_BY_OWNER_OFFSET_AND_LIMIT = "SELECT * FROM leads WHERE companyid=? AND owner ILIKE ? ORDER BY id DESC LIMIT ? OFFSET ? ";
+	public static final String SEARCH_LEADS_BY_OWNER_OFFSET_AND_LIMIT_SUPERADMIN = "SELECT * FROM leads WHERE owner ILIKE ? ORDER BY id DESC LIMIT ? OFFSET ? ";
 	public static final String SEARCH_LEADS_BY_NAME_OFFSET_AND_LIMIT = "SELECT * FROM leads WHERE companyid=? AND name ILIKE ? ORDER BY id DESC LIMIT ? OFFSET ? ";
+	public static final String SEARCH_LEADS_BY_NAME_OFFSET_AND_LIMIT_SUPERADMIN = "SELECT * FROM leads WHERE name ILIKE ? ORDER BY id DESC LIMIT ? OFFSET ? ";
 	
 	
 	public List<Lead> searchLead(String searchBy, String search, int limit, int offset, int companyId){
@@ -639,6 +683,53 @@ public class LeadDao {
 		}
 		return list;
 	}
+	public List<Lead> searchLeadSuperadmin(String searchBy, String search, int limit, int offset){
+		LeadDao leadDao = new LeadDao();
+		List<Lead> list = new ArrayList<>();
+		if(searchBy.equals("id")){
+			try{
+				int id = Integer.parseInt(search);
+				pst = con.prepareStatement(SEARCH_LEADS_BY_ID_OFFSET_AND_LIMIT_SUPERADMIN);
+				pst.setInt(1, id);
+				pst.setInt(2, limit);
+				pst.setInt(3, offset);
+				ResultSet rst = pst.executeQuery();
+				while(rst.next()){
+					Lead lead = new Lead();
+					lead.setId(rst.getInt("id"));
+					lead.setName(rst.getString("name"));
+					lead.setEmail(rst.getString("email"));
+					lead.setAddress(rst.getString("address"));
+					lead.setCurrentowner(rst.getString("currentowner"));
+					lead.setCreationDate(rst.getTimestamp("creation_date"));
+					lead.setMobile(rst.getString("mobile"));
+					lead.setOwner(rst.getString("owner"));
+					lead.setSource(rst.getString("source"));
+					lead.setStatus(rst.getString("status"));
+					lead.setCompanyId(rst.getInt("companyid"));
+					lead.setEducation(rst.getString("education"));
+					lead.setExperience(rst.getString("experience"));;
+					lead.setSalary(rst.getInt("salary"));;
+					list.add(lead);
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}else if(searchBy.equals("email")){
+			list = leadDao.searchSuperadmin(SEARCH_LEADS_BY_EMAIL_OFFSET_AND_LIMIT_SUPERADMIN, search, limit, offset);
+		}else if(searchBy.equals("name")){
+			list = leadDao.searchSuperadmin(SEARCH_LEADS_BY_NAME_OFFSET_AND_LIMIT_SUPERADMIN, search, limit, offset);
+		}else if(searchBy.equals("mobile")){
+			list = leadDao.searchSuperadmin(SEARCH_LEADS_BY_MOBILE_OFFSET_AND_LIMIT_SUPERADMIN, search, limit, offset);
+		}else if(searchBy.equals("owner")){
+			list = leadDao.searchSuperadmin(SEARCH_LEADS_BY_OWNER_OFFSET_AND_LIMIT_SUPERADMIN, search, limit, offset);
+		}else if(searchBy.equals("status")){
+			list = leadDao.searchSuperadmin(SEARCH_LEADS_BY_STATUS_OFFSET_AND_LIMIT_SUPERADMIN, search, limit, offset);
+		}else if(searchBy.equals("currentowner")){
+			list = leadDao.searchSuperadmin(SEARCH_LEADS_BY_CURRENT_OWNER_OFFSET_AND_LIMIT_SUPERADMIN, search, limit, offset);
+		}
+		return list;
+	}
 	public List<Lead> search(String query , String search,int limit, int offset, int companyId){
 		List<Lead> list = new ArrayList<>();
 		try{
@@ -647,6 +738,38 @@ public class LeadDao {
 			pst.setString(2, "%"+search+"%");
 			pst.setInt(3, limit);
 			pst.setInt(4, offset);
+			ResultSet rst = pst.executeQuery();
+			while(rst.next()){
+				Lead lead = new Lead();
+				lead.setId(rst.getInt("id"));
+				lead.setName(rst.getString("name"));
+				lead.setEmail(rst.getString("email"));
+				lead.setAddress(rst.getString("address"));
+				lead.setCurrentowner(rst.getString("currentowner"));
+				lead.setCreationDate(rst.getTimestamp("creation_date"));
+				lead.setMobile(rst.getString("mobile"));
+				lead.setOwner(rst.getString("owner"));
+				lead.setSource(rst.getString("source"));
+				lead.setStatus(rst.getString("status"));
+				lead.setCompanyId(rst.getInt("companyid"));
+				lead.setEducation(rst.getString("education"));
+				lead.setExperience(rst.getString("experience"));;
+				lead.setSalary(rst.getInt("salary"));;
+				list.add(lead);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public List<Lead> searchSuperadmin(String query , String search,int limit, int offset){
+		List<Lead> list = new ArrayList<>();
+		try{
+			pst = con.prepareStatement(query);
+			pst.setString(1, "%"+search+"%");
+			pst.setInt(2, limit);
+			pst.setInt(3, offset);
 			ResultSet rst = pst.executeQuery();
 			while(rst.next()){
 				Lead lead = new Lead();

@@ -101,7 +101,9 @@ int companyCount = companyDao.getAllCompanyCount();
 			            <p>Comment : <%= comment.getComment() %></p>
 			            <h5>Posted on : <%= comment.getCreationDate().toLocaleString() %></h5>
 			        </div>
-			        <%if(comment.getUserid() == user.getId()) {%>
+			        <%if(comment.getUserid() == user.getId()) {
+			        	session.setAttribute("leadid", leadId);
+			        %>
 				        <div class="btn-container">
 							<form method="post" action="update-super-admin-comment.jsp">
 								<input name="comment-id" value="<%= comment.getId() %>" hidden="true">

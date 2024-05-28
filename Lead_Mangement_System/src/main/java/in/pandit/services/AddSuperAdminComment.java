@@ -9,9 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import in.pandit.dao.CommentDao;
+import in.pandit.dao.LeadDao;
 import in.pandit.dao.UserDao;
 import in.pandit.helper.CookiesHelper;
 import in.pandit.model.Comment;
+import in.pandit.model.Lead;
 import in.pandit.model.User;
 
 /**
@@ -30,7 +32,10 @@ public class AddSuperAdminComment extends HttpServlet {
 		int leadid = Integer.parseInt(request.getParameter("leadid"));
 		String commentText = request.getParameter("comment");
 		HttpSession session = request.getSession();
+		String status = request.getParameter("status");
 		User user = CookiesHelper.getUserCookies(request, "user");
+		LeadDao leadDao = new LeadDao();
+		Lead lead = leadDao.getLeadById(leadid);
 		CommentDao commentDao = new CommentDao();
 		try {
 			Comment comment = new Comment();
@@ -38,9 +43,12 @@ public class AddSuperAdminComment extends HttpServlet {
 			comment.setUserid(user.getId());
 			comment.setUseremail(user.getEmail());
 			comment.setLeadid(leadid);
-			comment.setCompanyId(-1);
+			comment.setCompanyId(user.getCompanyId());
+			
 			int done = commentDao.insertComment(comment);
 			if(done>0) {
+				lead.setStatus(status);
+				leadDao.updateLead(lead);
 				session.setAttribute("superAdminMsg", "Comment Posted");
 				response.sendRedirect("allLeadsSuperAdmin.jsp");
 			}else {

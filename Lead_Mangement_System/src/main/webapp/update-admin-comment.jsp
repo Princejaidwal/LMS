@@ -34,9 +34,8 @@ String comment = request.getParameter("comment");
 String email = (String)session.getAttribute("email");
 int companyId = userCookie.getCompanyId();
 int totalLeadCount = leadDao.getTotalLeadsCountByCompanyId(companyId);
-int totalLeadCountByFacebookSource = leadDao.getLeadsCountUsingSourceAndCompany("facebook", companyId);
-int totalLeadCountByGoogleSource = leadDao.getLeadsCountUsingSourceAndCompany("google", companyId);
-int userCount = userDao.getUserCountUsingIsAdmin("User", companyId);
+int totalLeadCountByAssigned = leadDao.getLeadsCountUsingAssigned(userCookie.getEmail(), companyId);
+int totalLeadCountByEnrolled = leadDao.getLeadsCountUsingCompanyIdAndStatus(companyId, "Already Enrolled");int userCount = userDao.getUserCountUsingIsAdmin("User", companyId);
 Lead lead = leadDao.getLeadById(leadId);
 if(!userEmail.equals(email)) {
 	response.sendRedirect("allLeadsSuperAdmin.jsp");

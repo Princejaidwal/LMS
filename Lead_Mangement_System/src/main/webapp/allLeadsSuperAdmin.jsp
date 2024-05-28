@@ -26,7 +26,7 @@ User userCookie = CookiesHelper.getUserCookies(request, "user");
 int totalLeadCount = leadDao.getTotalLeadsCount();
 Connection connect = DatabaseConnection.getConnection();
 int currentPage = (request.getParameter("page") != null) ? Integer.parseInt(request.getParameter("page")) : 1;
-int itemsPerPage = 10;
+int itemsPerPage = 20;
 int totalPages = (int) Math.ceil((double) totalLeadCount / itemsPerPage);
 
 List<Lead> list = leadDao.getAllLeadsByLimit(itemsPerPage, (currentPage - 1) * itemsPerPage);
@@ -80,7 +80,7 @@ List<Lead> list = leadDao.getAllLeadsByLimit(itemsPerPage, (currentPage - 1) * i
 			</div>
 		</div>
 		
-		<%-- <div class="main-container p-2">
+		<div class="main-container p-2">
 			<form action="/Lead_Mangement_System/search-superadmin-leads.jsp" method="get">
 				<div class="row">
 					<div class="col-4  text-white d-flex flex-column">
@@ -105,9 +105,9 @@ List<Lead> list = leadDao.getAllLeadsByLimit(itemsPerPage, (currentPage - 1) * i
 					</div>
 				</div>
 			</form>
-		</div> --%>
+		</div>
 		<div class="pe-2 ps-2">
-			<p class="fs-2 text-white box-heading">All Leads</p>
+			<p class="fs-2 text-white box-heading">All Leads (Page : <%= currentPage %>)</p>
 		</div>
 		<hr class="divide">		
 		<div class="main-container">
@@ -133,8 +133,10 @@ List<Lead> list = leadDao.getAllLeadsByLimit(itemsPerPage, (currentPage - 1) * i
 						<th>Mobile</th>
 						<th>Date</th>
 						<th>Owner</th>
+						<th>Current Owner</th>
+						<th>Status</th>
 						<th>Comment</th>
-						<%-- <th colspan="2">Action</th> --%>
+						<th colspan="2">Action</th>
 					</tr>
 				</thead>
   				<tbody>
@@ -146,6 +148,8 @@ List<Lead> list = leadDao.getAllLeadsByLimit(itemsPerPage, (currentPage - 1) * i
 						<td><%= l.getMobile() %></td>
 						<td><%= l.getCreationDate().toGMTString() %></td>
 						<td><%= l.getOwner() %></td>
+						<td><%= l.getCurrentowner() %></td>
+						<td><%= l.getStatus() %></td>
 						<td>
 							<form action ="show-super-lead-comment.jsp?leadid=<%= l.getId() %>" method = 'post'>
 								<button type = 'submit' class = 'submit-btn w-100'  name = 'view-comment' value = "<%=l.getEmail() %>">View</button>
@@ -154,12 +158,12 @@ List<Lead> list = leadDao.getAllLeadsByLimit(itemsPerPage, (currentPage - 1) * i
 								<button type = 'submit' class = 'submit-btn w-100' name = 'add-comment' value = "<%=l.getEmail() %>">Add</button>
 							</form>
 						</td>
-						<%-- <td>
+						<td>
 							<form action ='updateSuperAdminAllLeads.jsp' method = 'post'>
 								<button type = 'submit' class = 'submit-btn w-100'  name = 'update' value = "<%=l.getId() %>">Update</button>
 							</form>
 							<button class = 'submit-btn w-100 mt-2' name = 'delete' onclick='myFunction(<%= l.getId() %>)'>Delete</button>
-						</td> --%>
+						</td>
 					</tr>
 				<%}%>
    				</tbody>
@@ -167,13 +171,43 @@ List<Lead> list = leadDao.getAllLeadsByLimit(itemsPerPage, (currentPage - 1) * i
 
 <!--		Start Pagination -->
 			<div>
-			    <% if (currentPage > 1) { %>
-			        <a class="btn btn-primary" style="padding: 2px 4px; text-decoration: none;" href="/Lead_Mangement_System/allLeadsSuperAdmin.jsp?page=<%= currentPage - 1 %>"> &lt; Previous</a>
-			    <% } %>
-			    <% if (currentPage < totalPages) { %>
-			        <a class="btn btn-primary" style="padding: 2px 4px; text-decoration: none;" href="/Lead_Mangement_System/allLeadsSuperAdmin.jsp?page=<%= currentPage + 1 %>">Next &gt;</a>
-			    <% } %>
-			</div>
+					<%
+					if (currentPage > 1) {
+					%>
+					<a class='submit-btn w-100'
+						style="padding: 2px 4px; text-decoration: none;"
+						href="/Lead_Mangement_System/allLeadsSuperAdmin.jsp?page=<%=currentPage - 1%>">
+						&lt; Previous</a>
+					<%
+					}
+					%>
+
+					<%
+					int maxPageButtons = 10; // Change this number to display more or fewer page buttons
+					int startPage = Math.max(1, currentPage - maxPageButtons / 2);
+					int endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
+					if(endPage!=1){
+						for (int i = startPage; i <= endPage; i++) {
+							%>
+							<a class='submit-btn w-100'
+								style="padding: 2px 4px; text-decoration: none;"
+								href="/Lead_Mangement_System/allLeadsSuperAdmin.jsp?page=<%=i%>"><%=i%></a>
+							<%
+							}
+					}
+					%>
+
+					<%
+					if (currentPage < totalPages) {
+					%>
+					<a class='submit-btn w-100'
+						style="padding: 2px 4px; text-decoration: none;"
+						href="/Lead_Mangement_System/allLeadsSuperAdmin.jsp?page=<%=currentPage + 1%>">Next
+						&gt;</a>
+					<%
+					}
+					%>
+				</div>
 		</div>
 	</div>
 	</div>

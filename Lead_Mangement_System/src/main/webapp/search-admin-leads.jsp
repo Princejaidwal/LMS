@@ -14,8 +14,17 @@
 <%@page import = "java.text.SimpleDateFormat" %>
 <%@page import = "java.util.Date" %>
 <%
-	String searchBy = request.getParameter("searchby").trim();
-	String search = request.getParameter("search").trim();
+String searchBy = "";
+String search = "";
+try {
+	searchBy = request.getParameter("searchby").trim();
+	search = request.getParameter("search").trim();
+	session.setAttribute("searchby", searchBy);
+	session.setAttribute("search", search);
+} catch (Exception e) {
+	searchBy = (String) session.getAttribute("searchby");
+	search = (String) session.getAttribute("search");
+}
 	
 	UserDao userDao = new UserDao();
 	LeadDao leadDao = new LeadDao();
@@ -50,7 +59,7 @@
 		leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE currentowner=? AND companyid=?", search,companyId);
 	}
 	int currentPage = (request.getParameter("page") != null) ? Integer.parseInt(request.getParameter("page")) : 1;
-	int itemsPerPage = 10;
+	int itemsPerPage = 20;
 	int totalPages = (int) Math.ceil((double) leadCount / itemsPerPage);
 	List<Lead> list = leadDao.searchLead(searchBy, search,itemsPerPage, (currentPage - 1) * itemsPerPage,companyId);
 	
@@ -215,13 +224,41 @@
 			<% }%>
 <!--		Start Pagination -->
 			<div>
-			    <% if (currentPage > 1) { %>
-			        <a class="btn btn-primary" style="padding: 2px 4px; text-decoration: none;" href="/Lead_Mangement_System/search-admin-leads.jsp?page=<%= currentPage - 1 %>&search=<%= search %>&searchby=<%= searchBy %>"> &lt; Previous</a>
-			    <% } %>
-			    <% if (currentPage < totalPages) { %>
-			        <a class="btn btn-primary" style="padding: 2px 4px; text-decoration: none;" href="/Lead_Mangement_System/search-admin-leads.jsp?page=<%= currentPage + 1 %>&search=<%= search %>&searchby=<%= searchBy %>">Next &gt;</a>
-			    <% } %>
-			</div>
+					<%
+					if (currentPage > 1) {
+					%>
+					<a class='submit-btn w-100'
+						style="padding: 2px 4px; text-decoration: none;"
+						href="/Lead_Mangement_System/posted-lead-user.jsp?page=<%=currentPage - 1%>">
+						&lt; Previous</a>
+					<%
+					}
+					%>
+
+					<%
+					int maxPageButtons = 10; // Change this number to display more or fewer page buttons
+					int startPage = Math.max(1, currentPage - maxPageButtons / 2);
+					int endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
+					for (int i = startPage; i <= endPage; i++) {
+					%>
+					<a class='submit-btn w-100'
+						style="padding: 2px 4px; text-decoration: none;"
+						href="/Lead_Mangement_System/search-admin-leads.jsp?page=<%=i%>"><%=i%></a>
+					<%
+					}
+					%>
+
+					<%
+					if (currentPage < totalPages) {
+					%>
+					<a class='submit-btn w-100'
+						style="padding: 2px 4px; text-decoration: none;"
+						href="/Lead_Mangement_System/search-admin-leads.jsp?page=<%=currentPage + 1%>">Next
+						&gt;</a>
+					<%
+					}
+					%>
+				</div>
 		</div>
 	</div>
 	<script>         

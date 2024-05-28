@@ -85,7 +85,7 @@ Connection connect = DatabaseConnection.getConnection();
 						<input class="form-control" type = "text" name = "manager-name" placeholder="Company Name" required/>
 					</div>
 					<div class="col-6 d-flex flex-column text-white">
-						<label class="fs-5 mb-2 mt-3">Manager Contact</label>
+						<label class="fs-5 mb-2 mt-3">Manager Contact No</label>
 						<input class="form-control" type = "tel" name = "manager-contact" placeholder="Manager Contact" maxlength= "10" required/>
 					</div>
 					<div class="col-6 d-flex flex-column text-white">

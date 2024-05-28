@@ -227,7 +227,7 @@ public class SuperAdminDao {
 		int count = 0;
 		try {
 			pst = con.prepareStatement(query);
-			pst.setString(1, countBy);
+			pst.setString(1, "%"+countBy+"%");
 			ResultSet rst = pst.executeQuery();
 			if (rst.next()) {
 				count = rst.getInt(1);

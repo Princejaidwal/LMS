@@ -29,7 +29,7 @@ public class updateSuperAdminAllLeads extends HttpServlet {
 		String address = request.getParameter("address").trim();
 		String mobile = request.getParameter("mobile").trim();
 		String source = request.getParameter("source").trim();
-		String date = request.getParameter("date").trim();
+  //	String date = request.getParameter("date").trim();
 		String owner = request.getParameter("owner").trim();
 		String currentOwner = request.getParameter("currentOwner").trim();
 		String status = request.getParameter("status").trim();

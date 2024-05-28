@@ -19,14 +19,13 @@ User userCookie = CookiesHelper.getUserCookies(request, "user");
 int companyId = userCookie.getCompanyId();
 int totalLeadCountByStatusFinished = leadDao.getLeadsCountUsingCompanyIdAndStatus(companyId, "Already Enrolled");
 int totalLeadCount = leadDao.getTotalLeadsCountByCompanyId(companyId);
-int totalLeadCountBySource = leadDao.getLeadsCountUsingSourceFacebookOrGoogleAndCompanyId(companyId);
+int totalLeadCountBySource = leadDao.getLeadsCountUsingAssigned(userCookie.getEmail(), companyId);
 int totalLeadCountNewLeads = leadDao.getLeadsCountNewLeadsByCompanyId(companyId);
 Connection connect = DatabaseConnection.getConnection();
 int currentPage = (request.getParameter("page") != null) ? Integer.parseInt(request.getParameter("page")) : 1;
-int itemsPerPage = 10;
+int itemsPerPage = 20;
 int totalPages = (int) Math.ceil((double) totalLeadCount / itemsPerPage);
 List<Lead> list = leadDao.getAllLeadsByLimitOffsetAndCompany(itemsPerPage, (currentPage - 1) * itemsPerPage, companyId);
-
 %>
 <!Doctype HTML>
 	<html>
@@ -147,13 +146,41 @@ List<Lead> list = leadDao.getAllLeadsByLimitOffsetAndCompany(itemsPerPage, (curr
    				</tbody>
 			</table>
 			<div>
-			    <% if (currentPage > 1) { %>
-			        <a class = 'submit-btn w-100' style="padding: 2px 4px; text-decoration: none;" href="/Lead_Mangement_System/allUserLeads.jsp?page=<%= currentPage - 1 %>"> &lt; Previous</a>
-			    <% } %>
-			    <% if (currentPage < totalPages) { %>
-			        <a class = 'submit-btn w-100' style="padding: 2px 4px; text-decoration: none;" href="/Lead_Mangement_System/allUserLeads.jsp?page=<%= currentPage + 1 %>">Next &gt;</a>
-			    <% } %>
-			</div>
+					<%
+					if (currentPage > 1) {
+					%>
+					<a class='submit-btn w-100'
+						style="padding: 2px 4px; text-decoration: none;"
+						href="/Lead_Mangement_System/posted-lead-user.jsp?page=<%=currentPage - 1%>">
+						&lt; Previous</a>
+					<%
+					}
+					%>
+
+					<%
+					int maxPageButtons = 10; // Change this number to display more or fewer page buttons
+					int startPage = Math.max(1, currentPage - maxPageButtons / 2);
+					int endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
+					for (int i = startPage; i <= endPage; i++) {
+					%>
+					<a class='submit-btn w-100'
+						style="padding: 2px 4px; text-decoration: none;"
+						href="/Lead_Mangement_System/allUserLeads.jsp?page=<%=i%>"><%=i%></a>
+					<%
+					}
+					%>
+
+					<%
+					if (currentPage < totalPages) {
+					%>
+					<a class='submit-btn w-100'
+						style="padding: 2px 4px; text-decoration: none;"
+						href="/Lead_Mangement_System/allUserLeads.jsp?page=<%=currentPage + 1%>">Next
+						&gt;</a>
+					<%
+					}
+					%>
+				</div>
 			<%} %>
 		</div>
 	</div>

@@ -1,3 +1,4 @@
+<%@page import="in.pandit.model.Lead"%>
 <%@page import="in.pandit.dao.CompanyDao"%>
 <%@page import="in.pandit.dao.LeadDao"%>
 <%@page import="in.pandit.helper.CookiesHelper"%>
@@ -30,6 +31,8 @@ int companyCount = companyDao.getAllCompanyCount();
 int userCount = userDao.getUserCount("User");
 int adminCount = userDao.getUserCount("Admin");
 int totalLeadCount = leadDao.getTotalLeadsCount();
+int leadid = Integer.parseInt(request.getParameter("leadid"));
+Lead lead = leadDao.getLeadById(leadid);
 %>
 <html>
 	<head>
@@ -80,6 +83,21 @@ int totalLeadCount = leadDao.getTotalLeadsCount();
 		    	<label>Comment</label>
 		    	<textarea rows="5" class="form-control" name="comment" placeholder="Enter Your Comment" required="required"></textarea>
 		    </div>
+		     <div class="form-inner-container">
+			    	<label class="fs-5 mb-2 mt-2">Lead Status</label>
+					<select name = "status" class="form-control" required>
+						<option selected ><%= lead.getStatus()%></option>
+						<%if(!lead.getStatus().equals("New")){ %><option value="New">New</option><%} %>
+						<%if(!lead.getStatus().equals("Not Interested")){ %><option value="Not Interested">Not Interested</option><%} %>
+						<%if(!lead.getStatus().equals("In Conversation")){ %><option value="In Conversation">In Conversation</option><%} %>
+						<%if(!lead.getStatus().equals("Follow Up")){ %><option value="Follow Up">Follow Up</option><%} %>
+						<%if(!lead.getStatus().equals("DNP")){ %><option value="DNP">DNP</option><%} %>
+						<%if(!lead.getStatus().equals("Not Reachable")){ %><option value="Not Reachable">Not Reachable</option><%} %>
+						<%if(!lead.getStatus().equals("Mobile Switched Off")){ %><option value="Mobile Switched Off">Mobile Switched Off</option><%} %>
+						<%if(!lead.getStatus().equals("Not Working")){ %><option value="Not Working">Not Working</option><%} %>
+						<%if(!lead.getStatus().equals("Already Enrolled")){ %><option value="Already Enrolled">Already Enrolled</option><%} %>
+					</select>
+			    </div>
 		    <div class="btn-container">
 				<input type="submit" class="submit-btn" value="Submit"/>
 		    </div>

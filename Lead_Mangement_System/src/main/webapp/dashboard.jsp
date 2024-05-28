@@ -19,9 +19,8 @@ LeadDao leadDao = new LeadDao();
 User userCookie = CookiesHelper.getUserCookies(request, "user");
 int companyId = userCookie.getCompanyId();
 int totalLeadCount = leadDao.getTotalLeadsCountByCompanyId(companyId);
-int totalLeadCountBySource = leadDao.getLeadsCountUsingSourceFacebookOrGoogleAndCompanyId(companyId);
+int totalLeadCountBySource = leadDao.getLeadsCountUsingAssigned(userCookie.getEmail(), companyId);
 int totalLeadCountNewLeads = leadDao.getLeadsCountNewLeadsByCompanyId(companyId);
-
 int totalLeadCountByStatusFinished = leadDao.getLeadsCountUsingCompanyIdAndStatus(companyId, "Already Enrolled");
 Connection connect = DatabaseConnection.getConnection();
 List<String> lst1 = userDao.getAllEmailByIsAdminAndCompanyId("User", "User", companyId);
@@ -72,6 +71,10 @@ List<String> lst1 = userDao.getAllEmailByIsAdminAndCompanyId("User", "User", com
 						<input class="form-control" type = "text" name = "name" placeholder="Lead Name" required/>
 					</div>
 					<div class="col-6 d-flex flex-column text-white">
+						<label class="fs-5 mb-2 mt-3">Email </label>
+						<input class="form-control" type = "email" name = "email" placeholder="Lead Email" required/>
+					</div>
+					<div class="col-6 d-flex flex-column text-white">
 						<label class="fs-5 mb-2 mt-3">Mobile </label>
 						<input class="form-control" type = "tel" name = "mobile" maxlength= "10" placeholder="Lead Mobile" required/>
 					</div>
@@ -114,10 +117,7 @@ List<String> lst1 = userDao.getAllEmailByIsAdminAndCompanyId("User", "User", com
 							<option value="Already Enrolled">Already Enrolled</option>
 						</select>
 					</div>
-					<div class="col-6 d-flex flex-column text-white">
-						<label class="fs-5 mb-2 mt-3">Email </label>
-						<input class="form-control" type = "email" name = "email" placeholder="Lead Email" required/>
-					</div>
+					
 					<div class="col-6 d-flex flex-column text-white">
 						<label class="fs-5 mb-2 mt-3">Notes </label>
 						<input class="form-control" type = "text" name = "address" placeholder="Lead Notes" required/>

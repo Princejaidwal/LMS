@@ -15,11 +15,19 @@
 <%@page import = "java.text.SimpleDateFormat" %>
 <%@page import = "java.util.Date" %>
 <%
-String searchBy = request.getParameter("searchby").trim();
-String search = request.getParameter("search").trim();
-
-LeadDao leadDao = new LeadDao();
+String searchBy = "";
+String search = "";
+try {
+	searchBy = request.getParameter("searchby").trim();
+	search = request.getParameter("search").trim();
+	session.setAttribute("searchby", searchBy);
+	session.setAttribute("search", search);
+} catch (Exception e) {
+	searchBy = (String) session.getAttribute("searchby");
+	search = (String) session.getAttribute("search");
+}
 SuperAdminDao superAdminDao = new SuperAdminDao();
+LeadDao leadDao = new LeadDao();
 User userCookie = CookiesHelper.getUserCookies(request, "user");
 int companyId = userCookie.getCompanyId();
 int userCount = superAdminDao.getUserCount("User");
@@ -33,24 +41,24 @@ int leadCount = 0;
 if(searchBy.equals("id")){
 	leadCount = 1;
 }else if(searchBy.equals("email")){
-	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE email=?", search);
+	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE email LIKE ?", search);
 }else if(searchBy.equals("address")){
-	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE address=?", search);
+	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE address LIKE ?", search);
 }else if(searchBy.equals("name")){
-	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE name=?", search);
+	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE name LIKE ?", search);
 }else if(searchBy.equals("mobile")){
-	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE mobile=?", search);
+	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE mobile LIKE ?", search);
 }else if(searchBy.equals("owner")){
-	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE owner=?", search);
+	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE owner LIKE ?", search);
 }else if(searchBy.equals("status")){
-	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE status=?", search);
+	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE status LIKE ?", search);
 }else if(searchBy.equals("currentowner")){
-	leadCount = leadDao.getLeadsCountByCompanyId("SELECT COUNT(id) FROM leads WHERE currentowner=? AND companyid=?", search, companyId);
+	leadCount = superAdminDao.getLeadsCount("SELECT COUNT(id) FROM leads WHERE currentowner LIKE ?", search);
 }
 int currentPage = (request.getParameter("page") != null) ? Integer.parseInt(request.getParameter("page")) : 1;
-int itemsPerPage = 10;
+int itemsPerPage = 20;
 int totalPages = (int) Math.ceil((double) leadCount / itemsPerPage);
-List<Lead> list = leadDao.searchLead(searchBy, search,itemsPerPage, (currentPage - 1) * itemsPerPage,companyId);
+List<Lead> list = leadDao.searchLeadSuperadmin(searchBy, search,itemsPerPage, (currentPage - 1) * itemsPerPage);
 
 %>
 <!Doctype HTML>
@@ -507,10 +515,9 @@ table tr:nth-child(even){
 					<div class="row">
 						<div class="col-4  text-white d-flex flex-column">
 							<label for="searchby" class="h5">Search By:</label>
-							<select id="searchby" name="searchby" class="form-control text-dark">
+							<select id="searchby" name="searchby" class="form-control text-dark" >
 								<option value="id">Id</option>
 								<option value="email">Email</option>
-								<%-- <option value="address">Address</option> --%>
 								<option value="name">Name</option>
 								<option value="mobile">Mobile</option>
 								<option value="owner">Owner</option>
@@ -539,7 +546,8 @@ table tr:nth-child(even){
 					<h1 class="text-white">Record Not found</h1>
 				<% } else{%>
 				
-				<p>All Leads</p>
+				<p>All Leads (Total Search Results:
+				<%= leadCount %>, Page <%= currentPage %>)</p>
 				
 
 		<div class="container-fluid">
@@ -620,13 +628,41 @@ table tr:nth-child(even){
 			<% }%>
 <!--		Start Pagination -->
 			<div>
-			    <% if (currentPage > 1) { %>
-			        <a class="btn btn-primary" style="padding: 2px 4px; text-decoration: none;" href="/Lead_Mangement_System/search-superadmin-leads.jsp?page=<%= currentPage - 1 %>&search=<%= search %>&searchby=<%= searchBy %>"> &lt; Previous</a>
-			    <% } %>
-			    <% if (currentPage < totalPages) { %>
-			        <a class="btn btn-primary" style="padding: 2px 4px; text-decoration: none;" href="/Lead_Mangement_System/search-superadmin-leads.jsp?page=<%= currentPage + 1 %>&search=<%= search %>&searchby=<%= searchBy %>">Next &gt;</a>
-			    <% } %>
-			</div>
+					<%
+					if (currentPage > 1) {
+					%>
+					<a class='submit-btn w-100'
+						style="padding: 2px 4px; text-decoration: none;"
+						href="/Lead_Mangement_System/search-superadmin-leads.jsp?page=<%=currentPage - 1%>">
+						&lt; Previous</a>
+					<%
+					}
+					%>
+
+					<%
+					int maxPageButtons = 10; // Change this number to display more or fewer page buttons
+					int startPage = Math.max(1, currentPage - maxPageButtons / 2);
+					int endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
+					for (int i = startPage; i <= endPage; i++) {
+					%>
+					<a class='submit-btn w-100'
+						style="padding: 2px 4px; text-decoration: none;"
+						href="/Lead_Mangement_System/search-superadmin-leads.jsp?page=<%=i%>"><%=i%></a>
+					<%
+					}
+					%>
+
+					<%
+					if (currentPage < totalPages) {
+					%>
+					<a class='submit-btn w-100'
+						style="padding: 2px 4px; text-decoration: none;"
+						href="/Lead_Mangement_System/search-superadmin-leads.jsp?page=<%=currentPage + 1%>">Next
+						&gt;</a>
+					<%
+					}
+					%>
+				</div>
 
 			</div>
 			</div>

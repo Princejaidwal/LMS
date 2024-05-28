@@ -24,7 +24,7 @@ if(!"Superadmin".equals(userCookie.getIsAdmin())){
 int totalLeadCount = leadDao.getTotalLeadsCount();
 int companyCount = companyDao.getAllCompanyCount();
 int currentPage = (request.getParameter("page") != null) ? Integer.parseInt(request.getParameter("page")) : 1;
-int itemsPerPage = 10;
+int itemsPerPage = 20;
 int totalPages = (int) Math.ceil((double) companyCount / itemsPerPage);
 List<Company> list = companyDao.getAllCompany(itemsPerPage, (currentPage - 1) * itemsPerPage);
 %>

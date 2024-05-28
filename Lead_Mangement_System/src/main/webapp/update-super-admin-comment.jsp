@@ -1,3 +1,4 @@
+<%@page import="in.pandit.model.Lead"%>
 <%@page import="in.pandit.dao.LeadDao"%>
 <%@page import="in.pandit.helper.CookiesHelper"%>
 <%@page import="in.pandit.model.User"%>
@@ -35,12 +36,14 @@ int userCount = userDao.getUserCount("User", companyId);
 int adminCount = userDao.getUserCount("Admin",companyId);
 int totalLeadCountByStatusFinished = leadDao.getLeadsCountUsingCompanyIdAndStatus(companyId, "Already Enrolled");
 int totalLeadCount = leadDao.getTotalLeadsCountByCompanyId(companyId);
-
+int leadId = (Integer)session.getAttribute("leadid");
+Lead lead = leadDao.getLeadById(leadId);
 Connection connect = DatabaseConnection.getConnection();
 %>
 <html>
 	<head>
 		<title>User Dashboard</title>
+		
 		<link rel="stylesheet" href="css/style.css" type="text/css"/>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
@@ -387,6 +390,7 @@ input[type=text]:focus {
 .form-inner-container textarea{
 	font-size: 20px;
 }
+
 </style>
 <!-- This cdn is for sweet alert -->
 <script src=
@@ -469,43 +473,6 @@ input[type=text]:focus {
 	</div>
 		<div class="clearfix"></div>
 	</div>
-
-		<div class="clearfix"></div>
-		<br/>
-		
-		<div class="col-div-3">
-			<div class="box">
-				<p> <%= totalLeadCount %> 
-	<br/><span>Total Leads</span></p>
-				<i class="fa fa-line-chart box-icon"></i>
-			</div>
-		</div>
-		<div class="col-div-3">
-			<div class="box">
-				<p>
-					<%= userCount %>
-				<br/><span>All Users</span></p>
-				<i class="fa fa-users box-icon"></i>
-			</div>
-		</div>
-		<div class="col-div-3">
-			<div class="box">
-				<p>
-					<%= adminCount %>
-				<br/><span>All Admin</span></p>
-				<i class="fa fa-user-circle box-icon"></i>
-			</div>
-		</div>
-		<div class="col-div-3">
-			<div class="box">
-				<p><%= totalLeadCountByStatusFinished %><br/><span>Enrolled</span></p>
-				<i class="fa fa-tasks box-icon"></i>
-			</div>
-		</div>
-		
-		
-		<div class="clearfix"></div>
-		<br/>
 		
 		
 		<!-- Adding new leads form -->
@@ -528,6 +495,21 @@ input[type=text]:focus {
 				    	<label>Comment</label>
 				    	<textarea rows="5" name="comment" required="required"><%= comment  %></textarea>
 				    </div>
+				     <div class="form-inner-container">
+			    	<label class="fs-5 mb-2 mt-2">Lead Status</label>
+					<select name = "status" class="form-control" required>
+						<option selected ><%= lead.getStatus()%></option>
+						<%if(!lead.getStatus().equals("New")){ %><option value="New">New</option><%} %>
+						<%if(!lead.getStatus().equals("Not Interested")){ %><option value="Not Interested">Not Interested</option><%} %>
+						<%if(!lead.getStatus().equals("In Conversation")){ %><option value="In Conversation">In Conversation</option><%} %>
+						<%if(!lead.getStatus().equals("Follow Up")){ %><option value="Follow Up">Follow Up</option><%} %>
+						<%if(!lead.getStatus().equals("DNP")){ %><option value="DNP">DNP</option><%} %>
+						<%if(!lead.getStatus().equals("Not Reachable")){ %><option value="Not Reachable">Not Reachable</option><%} %>
+						<%if(!lead.getStatus().equals("Mobile Switched Off")){ %><option value="Mobile Switched Off">Mobile Switched Off</option><%} %>
+						<%if(!lead.getStatus().equals("Not Working")){ %><option value="Not Working">Not Working</option><%} %>
+						<%if(!lead.getStatus().equals("Already Enrolled")){ %><option value="Already Enrolled">Already Enrolled</option><%} %>
+					</select>
+			    </div>
 				    <div class="btn-container">
 						<input type="submit" class="submit-btn" value="submit"/>
 				    </div>
